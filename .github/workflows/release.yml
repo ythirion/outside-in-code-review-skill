@@ -1,0 +1,100 @@
+name: Release skill
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and draft release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: tag
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract metadata from SKILL.md
+        id: meta
+        run: |
+          YAML=$(awk 'BEGIN{found=0} /^---/{found++; next} found==1{print} found==2{exit}' SKILL.md)
+          SKILL_VERSION=$(echo "$YAML" | grep '^version:' | sed 's/^version: *//')
+          DESCRIPTION=$(echo "$YAML" | grep '^description:' | sed 's/^description: *> *//' | sed 's/^description: *//')
+          echo "skill_version=$SKILL_VERSION" >> "$GITHUB_OUTPUT"
+          echo "description=$DESCRIPTION" >> "$GITHUB_OUTPUT"
+
+      - name: Validate tag matches skill version
+        run: |
+          TAG="${{ steps.tag.outputs.version }}"
+          SKILL="v${{ steps.meta.outputs.skill_version }}"
+          if [[ "$TAG" != "$SKILL" ]]; then
+            echo "ERROR: tag ($TAG) does not match version in skill.md ($SKILL)"
+            echo "Bump the version field in skill.md before tagging."
+            exit 1
+          fi
+
+      - name: Package skill
+        run: bash scripts/package.sh
+
+      - name: Verify artifact
+        run: |
+          ARCHIVE="outside-in-code-review-${{ steps.meta.outputs.skill_version }}.zip"
+          echo "--- Archive contents ---"
+          unzip -l "$ARCHIVE"
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          tag_name: ${{ steps.tag.outputs.version }}
+          name: "Outside-In Code Review ${{ steps.tag.outputs.version }}"
+          body: |
+            ## Outside-In Code Review ${{ steps.tag.outputs.version }}
+
+            > ${{ steps.meta.outputs.description }}
+
+            Skill by [Yoan Thirion](https://github.com/ythirion)
+
+            ---
+
+            ### Installation
+
+            Download and unzip `outside-in-code-review-${{ steps.meta.outputs.skill_version }}.zip`, then choose your installation method:
+
+            #### Option 1 — AI agent skill (recommended)
+
+            Installs into `~/.claude/skills/` — Claude Code picks it up automatically as a named skill:
+
+            ```bash
+            mkdir -p ~/.claude/skills/outside-in-code-review
+            cp -r skill/* ~/.claude/skills/outside-in-code-review/
+            ```
+
+            Then from any Claude Code session, just describe what you want:
+            > *"Review this codebase"* / *"Technical audit"* / *"Help me understand this repo"*
+
+            #### Option 2 — Individual slash commands
+
+            Install individual sub-commands:
+
+            ```bash
+            cp commands/* ~/.claude/commands/
+            ```
+
+            ---
+
+            ### Usage
+
+            Once the skill is installed, just describe what you want in any Claude Code session:
+            > *"Review this codebase"* / *"Technical audit"* / *"I don't know this codebase"*
+
+            Produces `outside-in-review/Report.md` + `outside-in-review/details/{Backlog,C4,CodeQuality}.md` in the current project.
+          files: outside-in-code-review-${{ steps.meta.outputs.skill_version }}.zip
