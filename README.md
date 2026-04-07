@@ -131,3 +131,7 @@ See [`examples/Report.md`](./examples/Report.md) for a complete example of what 
 - **Outside before inside** — surface artifacts reveal as much as code
 - **AI as cognitive reducer** — let the agent build the first mental model
 - **Human validation is mandatory** — all AI outputs must be verified with stakeholders
+
+## More explanations
+I have explained the concepts behind this approach during a talk at [Mendercon 2026](https://mendercon.com/):
+[![Outside-In Discovery - A structured way to understand Legacy Code](img/outside-in-discovery@mendercon.webp)](https://canva.link/4b9mxwe0oxw67js)
