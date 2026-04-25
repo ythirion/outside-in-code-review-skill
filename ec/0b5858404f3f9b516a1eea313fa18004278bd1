@@ -1,0 +1,23 @@
+.github/workflows/release.yml
+  e694d9f8e905dd46 28,40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "ec0b5858404f3f9b516a1eea313fa18004278bd1",
+  "prompts": {
+    "e694d9f8e905dd46": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "08083128-cac8-4285-a410-a3dd72703487",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Yoan Thirion",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 715,
+      "overriden_lines": 0
+    }
+  }
+}
