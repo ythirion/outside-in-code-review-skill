@@ -1,0 +1,14 @@
+examples/details/C4.md
+  h_1842ce48583c63 143,153
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "04f4a2554d11ee1a47ce7ec046a41a3f6311132a",
+  "prompts": {},
+  "humans": {
+    "h_1842ce48583c63": {
+      "author": "Yoan Thirion"
+    }
+  }
+}
