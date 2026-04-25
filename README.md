@@ -23,50 +23,62 @@ This skill is based on my two articles:
 
 ```
 outside-in-code-review/
+├── .claude-plugin/
+│   └── plugin.json              # Plugin manifest (claudepluginhub.com)
+├── commands/                    # Slash commands installed by the plugin
+│   ├── gather_product_insights.md
+│   ├── explain_the_architecture.md
+│   ├── detail_flow.md
+│   └── rate_code_quality.md
+├── skills/
+│   └── outside-in-code-review/
+│       ├── SKILL.md             # Skill definition: frontmatter metadata + execution protocol
+│       └── references/
+│           └── catalog.md       # All 28 code smells — definitions and refactoring guidance
+├── examples/
+│   ├── Report.md                # Sample Report.md for a fictional codebase
+│   └── details/                 # Sample detail files (Backlog, C4, CodeQuality)
+├── scripts/
+│   └── package.sh               # Builds outside-in-code-review-<version>.zip
 ├── README.md                    # This file
 ├── METHODOLOGY.md               # The 10-step outside-in framework
-├── skill.md                     # Skill definition: TOML metadata + execution protocol
 ├── checklist.md                 # Quick reference checklist
-├── scripts/
-│   └── package.sh              # Builds outside-in-code-review-<version>.zip
-├── references/
-│   └── catalog.md              # All 28 code smells — definitions and refactoring guidance
-├── examples/
-│   ├── Report.md               # Sample Report.md for a fictional codebase
-│   └── details/                # Sample detail files (Backlog, C4, CodeQuality)
-├── .claude/
-│   └── commands/
-│       ├── gather_product_insights.md
-│       ├── explain_the_architecture.md
-│       ├── detail_flow.md
-│       └── rate_code_quality.md
+├── LICENSE
 └── .github/
     └── workflows/
-        └── release.yml         # Packages .skill and creates draft release on version tag
+        └── release.yml          # Packages .skill and creates draft release on version tag
 ```
 
 ## Installation
 
-### Option 1 — AI agent skill (recommended)
+### Option 1 — Claude Plugin Hub (recommended)
 
-Download the latest zip from the [Releases](../../releases) page, unzip, and install into `~/.claude/skills/`:
+Install directly via the [Claude Plugin Hub](https://www.claudepluginhub.com):
+
+```
+outside-in-code-review
+```
+
+The plugin installs the skill and all slash commands automatically. From any Claude Code session, just describe what you want:
+
+> *"Review this codebase"* / *"Technical audit"* / *"Help me understand this repo"*
+
+### Option 2 — AI agent skill (manual)
+
+Download the latest zip from the [Releases](../../releases) page, unzip, and install:
 
 ```bash
 mkdir -p ~/.claude/skills/outside-in-code-review
 cp -r skill/* ~/.claude/skills/outside-in-code-review/
 ```
 
-Claude Code picks up the skill automatically. From any session, just describe what you want:
-
-> *"Review this codebase"* / *"Technical audit"* / *"Help me understand this repo"*
-
-### Option 2 — Individual slash commands
+### Option 3 — Individual slash commands
 
 ```bash
 cp commands/* ~/.claude/commands/
 ```
 
-### Option 3 — From source
+### Option 4 — From source
 
 ```bash
 bash scripts/package.sh
@@ -83,7 +95,7 @@ cp -r skill/* ~/.claude/skills/outside-in-code-review/
 
 ## Release a new version
 
-1. Bump the `version` field in `skill.md`
+1. Bump the `version` field in `skills/outside-in-code-review/SKILL.md` (and in `.claude-plugin/plugin.json`)
 2. Commit and push
 3. Tag the commit with the matching version:
 
@@ -94,8 +106,10 @@ git push origin v1.1.0
 
 The GitHub Action (`.github/workflows/release.yml`) will:
 - Package `outside-in-review.skill` from source
-- Validate that the tag matches the version in `skill.md`
+- Validate that the tag matches the version in `SKILL.md`
 - Create a **draft release** on GitHub with the `.skill` file attached
+
+The Claude Plugin Hub auto-discovers the update within 2 hours once the tag is pushed.
 
 Open the draft on GitHub, review the release notes, and publish when ready.
 

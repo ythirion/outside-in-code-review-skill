@@ -4,7 +4,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SKILL_MD="$REPO_ROOT/SKILL.md"
+SKILL_MD="$REPO_ROOT/skills/outside-in-code-review/SKILL.md"
 
 # ── Extract metadata (YAML frontmatter between --- delimiters) ─────────────────
 YAML=$(awk 'BEGIN{found=0} /^---/{found++; next} found==1{print} found==2{exit}' "$SKILL_MD")
@@ -24,14 +24,14 @@ trap 'rm -rf "$STAGING"' EXIT
 mkdir -p "$STAGING/commands" "$STAGING/skill/references" "$STAGING/img"
 
 # ── Skills folder layout (install into ~/.claude/skills/outside-in-code-review/) ──
-cp "$REPO_ROOT/SKILL.md"              "$STAGING/skill/"
-cp "$REPO_ROOT/references/catalog.md" "$STAGING/skill/references/"
+cp "$REPO_ROOT/skills/outside-in-code-review/SKILL.md"              "$STAGING/skill/"
+cp "$REPO_ROOT/skills/outside-in-code-review/references/catalog.md" "$STAGING/skill/references/"
 
 # ── Claude Code commands (install into ~/.claude/commands/) ──────────────────────
-cp "$REPO_ROOT/.claude/commands/gather_product_insights.md"  "$STAGING/commands/"
-cp "$REPO_ROOT/.claude/commands/explain_the_architecture.md" "$STAGING/commands/"
-cp "$REPO_ROOT/.claude/commands/detail_flow.md"              "$STAGING/commands/"
-cp "$REPO_ROOT/.claude/commands/rate_code_quality.md"        "$STAGING/commands/"
+cp "$REPO_ROOT/commands/gather_product_insights.md"  "$STAGING/commands/"
+cp "$REPO_ROOT/commands/explain_the_architecture.md" "$STAGING/commands/"
+cp "$REPO_ROOT/commands/detail_flow.md"              "$STAGING/commands/"
+cp "$REPO_ROOT/commands/rate_code_quality.md"        "$STAGING/commands/"
 
 # Skill definition and docs
 cp "$REPO_ROOT/img/outside-in-code-review.webp" "$STAGING/img/"
