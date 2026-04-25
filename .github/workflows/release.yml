@@ -25,7 +25,7 @@ jobs:
       - name: Extract metadata from SKILL.md
         id: meta
         run: |
-          YAML=$(awk 'BEGIN{found=0} /^---/{found++; next} found==1{print} found==2{exit}' SKILL.md)
+          YAML=$(awk 'BEGIN{found=0} /^---/{found++; next} found==1{print} found==2{exit}' skills/outside-in-code-review/SKILL.md)
           SKILL_VERSION=$(echo "$YAML" | grep '^version:' | sed 's/^version: *//')
           DESCRIPTION=$(echo "$YAML" | grep '^description:' | sed 's/^description: *> *//' | sed 's/^description: *//')
           echo "skill_version=$SKILL_VERSION" >> "$GITHUB_OUTPUT"
@@ -37,7 +37,7 @@ jobs:
           SKILL="v${{ steps.meta.outputs.skill_version }}"
           if [[ "$TAG" != "$SKILL" ]]; then
             echo "ERROR: tag ($TAG) does not match version in skill.md ($SKILL)"
-            echo "Bump the version field in skill.md before tagging."
+            echo "Bump the version field in skills/outside-in-code-review/SKILL.md before tagging."
             exit 1
           fi
 
