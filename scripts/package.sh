@@ -34,7 +34,7 @@ cp "$REPO_ROOT/commands/detail_flow.md"              "$STAGING/commands/"
 cp "$REPO_ROOT/commands/rate_code_quality.md"        "$STAGING/commands/"
 
 # Skill definition and docs
-cp "$REPO_ROOT/img/outside-in-code-review.webp" "$STAGING/img/"
+cp "$REPO_ROOT/img/" "$STAGING/img/"
 cp "$REPO_ROOT/README.md"   "$STAGING/"
 
 # ── Create archive ─────────────────────────────────────────────────────────────
