@@ -8,7 +8,7 @@ description: >
   "I don't know this codebase", "help me understand this repo",
   "can you analyze this project", "what does this codebase do".
 author: Yoan Thirion <https://github.com/ythirion/>
-version: 1.0.0
+version: 1.0.1
 outputs:
   - outside-in-review/Report.md
   - outside-in-review/details/Backlog.md
