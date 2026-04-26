@@ -1,0 +1,23 @@
+scripts/package.sh
+  10637c456c4b74f5 37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "682fd861276e90a1d90591aa0a76666ae3fd5253",
+  "prompts": {
+    "10637c456c4b74f5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a39473ff-f14b-460a-90ae-a6984fce7b2d",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Yoan Thirion",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
