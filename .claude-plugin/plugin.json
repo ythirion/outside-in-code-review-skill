@@ -1,6 +1,6 @@
 {
   "name": "outside-in-code-review",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Systematic codebase exploration from surface artifacts to implementation detail, producing an actionable discovery report within ~1 hour.",
   "keywords": [
     "code-review",
