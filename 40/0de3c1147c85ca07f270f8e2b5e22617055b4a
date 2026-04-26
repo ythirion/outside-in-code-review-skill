@@ -1,0 +1,14 @@
+scripts/package.sh
+  h_1842ce48583c63 37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "400de3c1147c85ca07f270f8e2b5e22617055b4a",
+  "prompts": {},
+  "humans": {
+    "h_1842ce48583c63": {
+      "author": "Yoan Thirion"
+    }
+  }
+}
