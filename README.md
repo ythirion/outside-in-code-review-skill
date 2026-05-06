@@ -54,7 +54,7 @@ outside-in-code-review/
 
 ### Option 1 — Claude Plugin Hub (recommended)
 
-Install directly via the [Claude Plugin Hub](https://www.claudepluginhub.com):
+Install directly via the [Claude Plugin Hub](https://www.claudepluginhub.com/plugins/ythirion-outside-in-code-review):
 
 ```
 outside-in-code-review
