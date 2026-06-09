@@ -1,0 +1,14 @@
+skills/outside-in-code-review/SKILL.md
+  h_0a88d9aba8622a 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "7a1a54f78949c35e3106e07db1307ff426f9f04e",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
