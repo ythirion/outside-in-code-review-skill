@@ -69,8 +69,7 @@ The plugin installs the skill and all slash commands automatically. From any Cla
 Download the latest zip from the [Releases](../../releases) page, unzip, and install:
 
 ```bash
-mkdir -p ~/.claude/skills/outside-in-code-review
-cp -r skill/* ~/.claude/skills/outside-in-code-review/
+cp -r skills/* ~/.claude/skills/
 ```
 
 ### Option 3 — Individual slash commands
