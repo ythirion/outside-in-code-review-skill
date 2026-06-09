@@ -1,0 +1,21 @@
+commands/rate_accessibility.md
+  s_81702768c22653::t_1bdbfafd1038ba 1-155
+commands/rate_ecodesign.md
+  s_81702768c22653::t_b0000f39473abe 1-161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "441fb94e2b84277a2b37103a7d86119d4928c42b",
+  "prompts": {},
+  "sessions": {
+    "s_81702768c22653": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e3388cf-d8c3-4041-95b9-88b483182f60",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+skills/outside-in-code-review/SKILL.md
+  s_81702768c22653::t_4875060596733b 363
+  s_81702768c22653::t_baea58437795ac 51
+  s_81702768c22653::t_b066a757b910aa 269-358
+  s_81702768c22653::t_a6d9f333e44f1f 106-108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "84e3c549ce4d14ee123f47a3330ae866219dc8fb",
+  "prompts": {},
+  "sessions": {
+    "s_81702768c22653": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e3388cf-d8c3-4041-95b9-88b483182f60",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
