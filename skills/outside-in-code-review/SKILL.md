@@ -48,7 +48,7 @@ Before starting, determine the repository name:
 
 ```
 outside-in-review/
-├── Report.md             ← full 11-section analysis + links to details
+├── Report.md             ← full 13-section analysis + links to details
 └── details/
     ├── Backlog.md        ← product backlog reverse-engineered from code
     ├── C4.md             ← C4 architecture diagrams in Mermaid syntax
@@ -103,7 +103,9 @@ Use these exact headers for the 11 sections:
 ## 🕐 8. Dependency Freshness
 ## 📊 9. Quality Metrics
 ## 🔥 10. Hotspots
-## 🎯 11. Summary
+## ♿ 11. Accessibility
+## 🌱 12. Eco-design
+## 🎯 13. Summary
 ```
 
 ---
@@ -264,12 +266,101 @@ Signals to report:
 
 ---
 
-### 🎯 11. Summary
+### ♿ 11. Accessibility
+
+**Language detection:** Check README, code comments, and commit messages to determine the project's primary language. If French → apply **RGAA 4.1** (Référentiel Général d'Amélioration de l'Accessibilité). Otherwise → apply **WCAG 2.1 AA**.
+
+**Scope detection:** If the project has no user-facing UI (pure backend, CLI, library), mark this section as `N/A` and explain why.
+
+Analyze sources for accessibility signals (HTML templates, JSX/TSX, Vue/Svelte components, native mobile layouts):
+- `lang` attribute on `<html>` element
+- Semantic HTML (`<nav>`, `<main>`, `<header>`, `<button>`, etc.) vs. `<div>`/`<span>` soup
+- ARIA attributes (`aria-label`, `aria-describedby`, `role`, `aria-live`, etc.)
+- `alt` attributes on all `<img>` elements
+- Associated `<label>` for every form input (or `aria-label`)
+- Keyboard navigation: `tabindex`, focus management, no keyboard traps
+- Color contrast references (CSS variables, design tokens — note that static analysis cannot measure rendered contrast)
+- Skip links and landmark regions
+
+RGAA-specific (if French):
+- Criterion 1.1 — every decorative image has `alt=""`
+- Criterion 8.3 / 8.4 — `lang` attribute present and valid
+- Criterion 11.1 — all form fields have a visible label
+
+WCAG-specific (if non-French):
+- 1.1.1 Non-text Content (Level A)
+- 1.3.1 Info and Relationships (Level A)
+- 2.4.3 Focus Order (Level A)
+- 4.1.2 Name, Role, Value (Level A)
+
+Signals to report:
+- 🔴 No `lang` attribute on root element
+- 🔴 Interactive elements (`<div onClick>`) not keyboard-accessible
+- 🔴 Images without `alt` attributes
+- 🟠 Form inputs without labels
+- 🟠 ARIA used incorrectly or overriding native semantics
+- 🟠 No skip-link to main content
+- ✅ Semantic HTML used throughout, all images labelled, keyboard navigation intact
+
+---
+
+### 🌱 12. Eco-design
+
+**Language detection:** If the project's primary language (see §11 detection) is French → apply **RGESN** (Référentiel Général d'Éco-conception de Services Numériques, édition 2024). Otherwise → apply general **Web Sustainability Guidelines (WSG 1.0)** / GreenIT best practices.
+
+**Scope detection:** If the project has no user-facing digital service (embedded firmware, pure CLI utility), mark this section as `N/A` and explain why.
+
+Analyze the codebase for eco-design signals:
+
+**Assets & payloads:**
+- Presence of unoptimized images (no WebP/AVIF, no `srcset`, no lazy loading)
+- Embedded video autoplay or background videos
+- Fonts: number of typefaces loaded, subset usage, `font-display`
+
+**Dependencies & bundle size:**
+- Total number of production dependencies vs. actual usage
+- Unused CSS (large utility frameworks fully imported)
+- Tree-shaking configuration in bundler (webpack, vite, rollup)
+
+**Queries & data transfers:**
+- N+1 query patterns or missing pagination on list endpoints
+- Over-fetching: REST endpoints returning full objects when only a few fields are needed; GraphQL queries without field selection
+- Missing HTTP caching headers (`Cache-Control`, `ETag`, `Last-Modified`)
+
+**Rendering & computation:**
+- Polling loops vs. event-driven / WebSocket patterns
+- Heavy computations on the client that could be server-side (or vice versa)
+- No debounce/throttle on frequent user events (resize, scroll, input)
+
+RGESN-specific (if French):
+- BP 1.1 — Éliminer les fonctionnalités non utilisées
+- BP 2.6 — Optimiser les images
+- BP 4.1 — Mettre en cache les ressources
+- BP 6.1 — Limiter le nombre de requêtes HTTP
+
+WSG-specific (if non-French):
+- 2.11 — Use efficient file formats
+- 2.15 — Lazy-load non-critical resources
+- 3.6 — Implement HTTP caching
+
+Signals to report:
+- 🔴 Autoplay video or background animations with no user control
+- 🔴 Entire CSS framework imported with no purge/tree-shake
+- 🔴 No pagination on collection endpoints (potential unbounded response)
+- 🟠 Images not converted to modern formats (WebP/AVIF)
+- 🟠 No `Cache-Control` headers on static assets
+- 🟠 Polling pattern where a push/event model would suffice
+- 🟠 Unused production dependencies (> 20% of declared deps)
+- ✅ Assets optimized and lazy-loaded, caching in place, lean dependency tree
+
+---
+
+### 🎯 13. Summary
 
 Structure the summary as follows:
 
 ```
-## 🎯 11. Summary
+## 🎯 13. Summary
 
 ### 🔴 Top 3 risks
 1. ...
