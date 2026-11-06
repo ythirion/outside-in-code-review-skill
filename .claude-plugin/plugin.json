@@ -1,7 +1,7 @@
 {
   "name": "outside-in-code-review",
-  "version": "1.0.1",
-  "description": "Systematic codebase exploration from surface artifacts to implementation detail, producing an actionable discovery report within ~1 hour.",
+  "version": "2.0.0",
+  "description": "Systematic codebase exploration from surface artifacts to implementation detail, producing an actionable discovery report as a static HTML site and PDF within ~1 hour: dashboard, C4 architecture, one detailed flow, backlog and code quality.",
   "keywords": [
     "code-review",
     "codebase-exploration",

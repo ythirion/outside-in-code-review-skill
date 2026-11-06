@@ -96,5 +96,7 @@ jobs:
             Once the skill is installed, just describe what you want in any Claude Code session:
             > *"Review this codebase"* / *"Technical audit"* / *"I don't know this codebase"*
 
-            Produces `outside-in-review/Report.md` + `outside-in-review/details/{Backlog,C4,CodeQuality}.md` in the current project.
+            Produces a static HTML site in `outside-in-review/` (dashboard, C4 architecture, one detailed flow, backlog, code quality) plus `outside-in-review.pdf`, in the current project.
+
+            Diagram validation and PDF export need Python 3 and a Chromium-based browser (Chrome, Chromium, Edge or Brave); nothing is downloaded at run time.
           files: outside-in-code-review-${{ steps.meta.outputs.skill_version }}.zip

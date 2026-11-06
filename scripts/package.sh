@@ -21,11 +21,16 @@ ARCHIVE="$REPO_ROOT/${NAME}-${VERSION}.zip"
 STAGING=$(mktemp -d)
 trap 'rm -rf "$STAGING"' EXIT
 
-mkdir -p "$STAGING/commands" "$STAGING/skill/references" "$STAGING/img"
+mkdir -p "$STAGING/commands" "$STAGING/skill" "$STAGING/img"
 
 # ── Skills folder layout (install into ~/.claude/skills/outside-in-code-review/) ──
-cp "$REPO_ROOT/skills/outside-in-code-review/SKILL.md"              "$STAGING/skill/"
-cp "$REPO_ROOT/skills/outside-in-code-review/references/catalog.md" "$STAGING/skill/references/"
+# SKILL.md + references/ + assets/ (CSS, fonts, embedded Mermaid) + scripts/ (validation, PDF export)
+SKILL_DIR="$REPO_ROOT/skills/outside-in-code-review"
+cp "$SKILL_DIR/SKILL.md" "$STAGING/skill/"
+for dir in references assets scripts; do
+  cp -R "$SKILL_DIR/$dir" "$STAGING/skill/"
+done
+find "$STAGING/skill" \( -name '__pycache__' -o -name '.DS_Store' \) -prune -exec rm -rf {} +
 
 # ── Claude Code commands (install into ~/.claude/commands/) ──────────────────────
 cp "$REPO_ROOT/commands/gather_product_insights.md"  "$STAGING/commands/"

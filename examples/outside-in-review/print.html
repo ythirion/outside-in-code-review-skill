@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Outside-In Review — jurassic-code</title>
+  <link rel="stylesheet" href="assets/report.css">
+  <script src="assets/vendor/mermaid.min.js" defer></script>
+  <script src="assets/diagrams.js" defer></script>
+</head>
+<body>
+<main id="main" class="container">
+  <section class="print-page print-cover" aria-label="Cover">
+    <div class="hero"><span class="hero__eyebrow">Outside-In Review</span>
+      <h1 class="hero__title">jurassic-code</h1>
+      <p class="hero__meta">Analyzed 2026-03-09 · ~1h time-box · commit 3bd6882 · Skill by <a href="https://github.com/ythirion/">Yoan Thirion</a></p></div>
+    <nav class="print-contents" aria-label="Contents">
+      <p class="toc__title">Contents</p>
+      <ol><li><a href="#page-index">Report</a></li><li><a href="#page-architecture">Architecture</a></li><li><a href="#page-flow-move-dinosaur">Flow: move a dinosaur</a></li><li><a href="#page-backlog">Backlog</a></li><li><a href="#page-code-quality">Code quality</a></li></ol>
+    </nav>
+  </section>
+<section class="print-page" id="page-index" aria-label="Report">
+
+<div class="layout"><!-- ================= DASHBOARD ================= -->
+        <section class="section" id="index--dashboard" aria-labelledby="index--dashboard-title">
+          <h2 class="section__title" id="index--dashboard-title">Dashboard</h2>
+          <div class="dashboard">
+            <div class="card card--hero">
+              <div class="dial dial--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="36" aria-label="Overall health" style="--value:36">
+                <span class="dial__value">36</span><span class="dial__label">health</span>
+              </div>
+              <div>
+                <p class="card__label">Verdict</p>
+                <p class="card__number">At risk</p>
+                <p class="card__desc">A small, readable teaching codebase whose backend runs on an EOL framework, shares one global mutable store across every request, and has no CI to catch regressions. The React frontend is modern; the .NET backend is not.</p>
+              </div>
+            </div>
+
+            <a class="card" href="#index--documentation">
+              <span class="card__label">01 · Documentation</span>
+              <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" aria-label="Documentation health" style="--value:40">
+                <div class="gauge__head"><span>Health</span><span class="gauge__value">40/100</span></div>
+                <div class="gauge__track"><div class="gauge__fill"></div></div>
+              </div>
+              <span class="card__desc">1 critical · 3 warnings</span>
+            </a>
+            <a class="card" href="#index--ci-cd">
+              <span class="card__label">02 · CI/CD</span>
+              <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="20" aria-label="CI/CD health" style="--value:20">
+                <div class="gauge__head"><span>Health</span><span class="gauge__value">20/100</span></div>
+                <div class="gauge__track"><div class="gauge__fill"></div></div>
+              </div>
+              <span class="card__desc">2 critical · 2 warnings</span>
+            </a>
+            <a class="card" href="#index--git-history">
+              <span class="card__label">03 · Git history</span>
+              <div class="gauge gauge--ok" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="80" aria-label="Git history health" style="--value:80">
+                <div class="gauge__head"><span>Health</span><span class="gauge__value">80/100</span></div>
+                <div class="gauge__track"><div class="gauge__fill"></div></div>
+              </div>
+              <span class="card__desc">0 critical · 2 warnings</span>
+            </a>
+            <a class="card" href="#index--build">
+              <span class="card__label">04 · Build</span>
+              <div class="gauge gauge--warning" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70" aria-label="Build health" style="--value:70">
+                <div class="gauge__head"><span>Health</span><span class="gauge__value">70/100</span></div>
+                <div class="gauge__track"><div class="gauge__fill"></div></div>
+              </div>
+              <span class="card__desc">0 critical · 3 warnings</span>
+            </a>
+            <a class="card" href="#index--warnings">
+              <span class="card__label">05 · Warnings</span>
+              <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="20" aria-label="Compilation warnings health" style="--value:20">
+                <div class="gauge__head"><span>Health</span><span class="gauge__value">20/100</span></div>
+                <div class="gauge__track"><div class="gauge__fill"></div></div>
+              </div>
+              <span class="card__desc">2 critical · 2 warnings</span>
+            </a>
+            <a class="card" href="#index--structure">
+              <span class="card__label">06 · Structure</span>
+              <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Code structure health" style="--value:0">
+                <div class="gauge__head"><span>Health</span><span class="gauge__value">0/100</span></div>
+                <div class="gauge__track"><div class="gauge__fill"></div></div>
+              </div>
+              <span class="card__desc">2 critical · 4 warnings</span>
+            </a>
+            <a class="card" href="#index--dependencies">
+              <span class="card__label">07 · Dependencies</span>
+              <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="30" aria-label="Dependencies health" style="--value:30">
+                <div class="gauge__head"><span>Health</span><span class="gauge__value">30/100</span></div>
+                <div class="gauge__track"><div class="gauge__fill"></div></div>
+              </div>
+              <span class="card__desc">2 critical · 1 warning</span>
+            </a>
+            <a class="card" href="#index--freshness">
+              <span class="card__label">08 · Freshness</span>
+              <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="30" aria-label="Dependency freshness health" style="--value:30">
+                <div class="gauge__head"><span>Health</span><span class="gauge__value">30/100</span></div>
+                <div class="gauge__track"><div class="gauge__fill"></div></div>
+              </div>
+              <span class="card__desc">2 critical · 1 warning</span>
+            </a>
+            <a class="card" href="#index--quality-metrics">
+              <span class="card__label">09 · Quality metrics</span>
+              <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="20" aria-label="Quality metrics health" style="--value:20">
+                <div class="gauge__head"><span>Health</span><span class="gauge__value">20/100</span></div>
+                <div class="gauge__track"><div class="gauge__fill"></div></div>
+              </div>
+              <span class="card__desc">2 critical · 2 warnings</span>
+            </a>
+            <a class="card" href="#index--hotspots">
+              <span class="card__label">10 · Hotspots</span>
+              <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="20" aria-label="Hotspots health" style="--value:20">
+                <div class="gauge__head"><span>Health</span><span class="gauge__value">20/100</span></div>
+                <div class="gauge__track"><div class="gauge__fill"></div></div>
+              </div>
+              <span class="card__desc">2 critical · 2 warnings</span>
+            </a>
+            <a class="card" href="#index--accessibility">
+              <span class="card__label">11 · Accessibility</span>
+              <div class="gauge gauge--warning" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60" aria-label="Accessibility health" style="--value:60">
+                <div class="gauge__head"><span>Health</span><span class="gauge__value">60/100</span></div>
+                <div class="gauge__track"><div class="gauge__fill"></div></div>
+              </div>
+              <span class="card__desc">0 critical · 4 warnings</span>
+            </a>
+            <a class="card" href="#index--eco-design">
+              <span class="card__label">12 · Eco-design</span>
+              <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" aria-label="Eco-design health" style="--value:40">
+                <div class="gauge__head"><span>Health</span><span class="gauge__value">40/100</span></div>
+                <div class="gauge__track"><div class="gauge__fill"></div></div>
+              </div>
+              <span class="card__desc">1 critical · 3 warnings</span>
+            </a>
+
+            <a class="card card--accent" href="#page-code-quality">
+              <span class="card__label">Code quality</span>
+              <span class="grade grade--f">F</span>
+              <span class="card__desc">14 smells: 5 critical, 5 significant, 4 minor</span>
+            </a>
+            <a class="card card--accent" href="#page-architecture">
+              <span class="card__label">Architecture</span>
+              <span class="card__number">4/4</span>
+              <span class="card__desc">C4 levels rendered and validated (5/5 diagrams in the report)</span>
+            </a>
+            <a class="card card--accent" href="#page-flow-move-dinosaur">
+              <span class="card__label">Detailed flow</span>
+              <span class="card__number">Move</span>
+              <span class="card__desc">Move a dinosaur between zones, UI to in-memory store</span>
+            </a>
+            <a class="card card--accent" href="#page-backlog">
+              <span class="card__label">Backlog</span>
+              <span class="card__number">9</span>
+              <span class="card__desc">features in 5 domains, 6 with a test, 4 incomplete or defective</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- ================= 01 ================= -->
+        <section class="section" id="index--documentation" aria-labelledby="index--documentation-title">
+          <h2 class="section__title" id="index--documentation-title"><span class="section__num">01</span> Documentation <span class="pill pill--critical">critical</span></h2>
+          <p class="section__summary">The README presents the project as a workshop for DevOps Days Geneva 2025 ("taming the dinosaurs of legacy code") and links to a Miro board and a cards PDF. It gives no instructions to build, run or test the application: a newcomer has to read the source tree to discover there is an API and a React frontend.</p>
+          <ul class="signals">
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>No setup instructions.</strong> The README only holds workshop material; no build, run or test steps.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>No architecture or decision records.</strong> <code>docs/</code> holds workshop cards and AI-generated artifacts, not living technical documentation.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Undocumented prerequisites.</strong> .NET SDK version, Node/npm versions and <code>dotnet-stryker</code> are never mentioned.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Undocumented scripts.</strong> <code>src/run.sh</code>, <code>src/stop.sh</code> and <code>src/build.sh</code> exist without any explanation.</div></li>
+            <li class="signal signal--ok"><span class="pill pill--ok">ok</span><div><strong>Swagger UI</strong> is served at the API root (<code>Startup.cs:65</code>), so endpoints document themselves once the server runs.</div></li>
+          </ul>
+        </section>
+
+        <!-- ================= 02 ================= -->
+        <section class="section" id="index--ci-cd" aria-labelledby="index--ci-cd-title">
+          <h2 class="section__title" id="index--ci-cd-title"><span class="section__num">02</span> CI/CD Pipelines <span class="pill pill--critical">critical</span></h2>
+          <p class="section__summary">There is no pipeline on the current branch. <code>src/.github/workflows/ci.yml</code> appears in five commits of the history but is gone from the working tree. Nothing gates a merge on <code>main</code>.</p>
+          <ul class="signals">
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>No active CI/CD pipeline.</strong> No <code>.github/workflows/</code> directory on the current branch.</div></li>
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>No quality gates.</strong> No coverage threshold, static analysis or mutation testing runs automatically.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>CI existed once.</strong> The workflow file is in the history, so the intent was there and was dropped.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>No PR protection.</strong> Merges to <code>main</code> are unguarded.</div></li>
+          </ul>
+        </section>
+
+        <!-- ================= 03 ================= -->
+        <section class="section" id="index--git-history" aria-labelledby="index--git-history-title">
+          <h2 class="section__title" id="index--git-history-title"><span class="section__num">03</span> Git History <span class="pill pill--warning">warning</span></h2>
+          <p class="section__summary">67 commits over about four months (2025-02-24 to 2025-06-30), by two contributors. The most changed files are workshop material (<code>IDEAS.md</code>, <code>claude/steps.md</code>) rather than production code. Commit messages follow Conventional Commits consistently.</p>
+          <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="93" aria-label="Share of commits by Yoan Thirion" style="--value:93">
+            <div class="gauge__head"><span>Yoan Thirion — share of commits</span><span class="gauge__value">62 · 93%</span></div>
+            <div class="gauge__track"><div class="gauge__fill"></div></div>
+          </div>
+          <div class="gauge" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="7" aria-label="Share of commits by Alexandre Trigueros" style="--value:7">
+            <div class="gauge__head"><span>Alexandre Trigueros — share of commits</span><span class="gauge__value">5 · 7%</span></div>
+            <div class="gauge__track"><div class="gauge__fill"></div></div>
+          </div>
+          <ul class="signals">
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Near-single contributor.</strong> One person owns 93% of commits; knowledge is concentrated.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Most changed files are docs and workshop artifacts.</strong> The code itself is treated as a static teaching fixture, not an evolving product.</div></li>
+            <li class="signal signal--ok"><span class="pill pill--ok">ok</span><div><strong>Conventional commits.</strong> <code>feat:</code>, <code>fix:</code>, <code>refactor:</code>, <code>docs:</code> used throughout.</div></li>
+            <li class="signal signal--ok"><span class="pill pill--ok">ok</span><div><strong>Active repository</strong> at the time of analysis (last commit June 2025).</div></li>
+          </ul>
+        </section>
+
+        <!-- ================= 04 ================= -->
+        <section class="section" id="index--build" aria-labelledby="index--build-title">
+          <h2 class="section__title" id="index--build-title"><span class="section__num">04</span> Build &amp; Compilation <span class="pill pill--warning">warning</span></h2>
+          <p class="section__summary"><code>dotnet build JurassicCode.sln</code> succeeds without extra steps and the 3 tests pass. All four .NET projects target <code>netcoreapp3.1</code>, end of life since December 2022. The Vite/React frontend has no documented start command and proxies <code>/api</code> to <code>https://localhost:5001</code> (<code>vite.config.ts</code>).</p>
+          <ul class="signals">
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>EOL target framework.</strong> <code>netcoreapp3.1</code> receives no security patches.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>No Docker Compose or dev container.</strong> API and frontend must be started by hand.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Frontend setup undocumented.</strong> No <code>npm install</code> / <code>npm run dev</code> instructions.</div></li>
+            <li class="signal signal--ok"><span class="pill pill--ok">ok</span><div><strong>Clean build from a single command</strong> in about 4 seconds.</div></li>
+            <li class="signal signal--ok"><span class="pill pill--ok">ok</span><div><strong>All 3 tests pass</strong> on the current state.</div></li>
+          </ul>
+        </section>
+
+        <!-- ================= 05 ================= -->
+        <section class="section" id="index--warnings" aria-labelledby="index--warnings-title">
+          <h2 class="section__title" id="index--warnings-title"><span class="section__num">05</span> Compilation Warnings <span class="pill pill--critical">critical</span></h2>
+          <p class="section__summary">The build emits 14 warnings. Two matter: a known vulnerability in <code>Swashbuckle.AspNetCore.SwaggerUI 5.6.3</code> and <code>Polly 2.2.0</code> restored against .NET Framework 4.x targets. The EOL framework warning is raised on every project.</p>
+          <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="Projects on an end-of-life framework" style="--value:100">
+            <div class="gauge__head"><span>Projects on an EOL framework</span><span class="gauge__value">4/4</span></div>
+            <div class="gauge__track"><div class="gauge__fill"></div></div>
+          </div>
+          <ul class="signals">
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>Vulnerable Swagger UI.</strong> <code>Swashbuckle.AspNetCore.SwaggerUI 5.6.3</code> is flagged by advisory <code>GHSA-qrmm-w75w-3wpx</code> (moderate).</div></li>
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong><code>netcoreapp3.1</code> EOL on every .NET project.</strong></div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Polly 2.2.0 incompatible with the target.</strong> NuGet resolved it against .NET Framework 4.x.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>14 warnings in a 4-project solution.</strong> None suppressed, but enough noise to hide real problems.</div></li>
+          </ul>
+        </section>
+
+        <!-- ================= 06 ================= -->
+        <section class="section" id="index--structure" aria-labelledby="index--structure-title">
+          <h2 class="section__title" id="index--structure-title"><span class="section__num">06</span> Code Structure <span class="pill pill--critical">critical</span></h2>
+          <p class="section__summary">Five projects, no discernible architecture. The domain library is flat; the service is a <code>partial class</code> split between <code>Class1.cs</code> and <code>Init.cs</code>; persistence goes through a static class holding a public static database; and <code>Database</code> reads its own private field by reflection.</p>
+<pre><code>src/
+├── JurassicCode/            domain + persistence, flat
+│   ├── Class1.cs            ParkService (partial) + IParkService   ← hotspot
+│   ├── Init.cs              ParkService (partial): 277 lines of seed data
+│   ├── ReflectionHelper.cs  reads private fields
+│   └── Db2/                 DataAccessLayer (static), Database, Entities
+├── JurassicCode.API/        ASP.NET Core: ParkController, WeatherForecastController (template leftover)
+├── JurassicCode.Tests/      xUnit: 3 tests
+├── JurrassicCode.Console/   VB.NET client (typo in the name), duplicates the seed data
+└── jurassic-ui/             React 19 + Vite + styled-components</code></pre>
+          <ul class="signals">
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>No discernible architecture.</strong> No layering, ports/adapters or feature modules.</div></li>
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>Business logic coupled to static data access.</strong> <code>ParkService</code> reads and mutates <code>DataAccessLayer._db</code> directly (<code>Class1.cs:29-196</code>).</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong><code>Class1.cs</code></strong> keeps the default IDE name for the central service.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Partial class split</strong> across <code>Class1.cs</code> and <code>Init.cs</code> for no structural reason.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Second runtime client</strong> (<code>JurrassicCode.Console</code>, VB.NET) duplicates the seed data.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Inconsistent names across the domain/persistence boundary.</strong> <code>IsCarnivorous</code> ↔ <code>IsVegan</code> (inverted), <code>Name</code> ↔ <code>CodeName</code>, <code>IsOpen</code> ↔ <code>AccessStatus</code>.</div></li>
+          </ul>
+        </section>
+
+        <!-- ================= 07 ================= -->
+        <section class="section" id="index--dependencies" aria-labelledby="index--dependencies-title">
+          <h2 class="section__title" id="index--dependencies-title"><span class="section__num">07</span> Dependencies <span class="pill pill--critical">critical</span></h2>
+          <p class="section__summary">The backend declares four third-party packages; two of them are never used and one carries a known advisory. The frontend dependency set is modern and lean.</p>
+          <h3>Backend (C#)</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Package</th><th>Version</th><th>Used?</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><code>Swashbuckle.AspNetCore</code></td><td class="num">5.6.3</td><td>yes</td><td><span class="pill pill--critical">advisory</span></td></tr>
+                <tr><td><code>Swashbuckle.AspNetCore.SwaggerUI</code></td><td class="num">5.6.3</td><td>yes</td><td><span class="pill pill--critical">advisory</span></td></tr>
+                <tr><td><code>Confluent.Kafka</code></td><td class="num">0.11.1</td><td>no</td><td><span class="pill pill--critical">abandoned major</span></td></tr>
+                <tr><td><code>Polly</code></td><td class="num">2.2.0</td><td>no</td><td><span class="pill pill--critical">incompatible</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3>Frontend (TypeScript / React)</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Package</th><th>Version</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><code>react</code></td><td class="num">^19.0.0</td><td><span class="pill pill--ok">current</span></td></tr>
+                <tr><td><code>vite</code></td><td class="num">^6.2.0</td><td><span class="pill pill--ok">current</span></td></tr>
+                <tr><td><code>react-router-dom</code></td><td class="num">^7.3.0</td><td><span class="pill pill--ok">current</span></td></tr>
+                <tr><td><code>styled-components</code></td><td class="num">^6.1.15</td><td><span class="pill pill--ok">maintained</span></td></tr>
+                <tr><td><code>axios</code></td><td class="num">^1.8.2</td><td><span class="pill pill--warning">declared, unused (fetch is used)</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="signals">
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong><code>Confluent.Kafka 0.11.1</code></strong>: a 2018 pre-1.0 release, never imported.</div></li>
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong><code>Polly 2.2.0</code></strong>: current is 8.x; 2.x dates from 2016 and does not fit the runtime.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Dead dependencies.</strong> Kafka, Polly (backend) and axios (frontend, <code>api.ts</code> uses <code>fetch</code>) are declared but unused.</div></li>
+            <li class="signal signal--ok"><span class="pill pill--ok">ok</span><div><strong>Frontend dependencies are modern and maintained.</strong></div></li>
+          </ul>
+        </section>
+
+        <!-- ================= 08 ================= -->
+        <section class="section" id="index--freshness" aria-labelledby="index--freshness-title">
+          <h2 class="section__title" id="index--freshness-title"><span class="section__num">08</span> Dependency Freshness <span class="pill pill--critical">critical</span></h2>
+          <p class="section__summary">Backend drift exceeds 15 libyears: Kafka is about 8 years behind, Polly about 6, Swashbuckle about 3, on top of the EOL runtime. The frontend sits under half a libyear.</p>
+          <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="15" aria-valuenow="15" aria-label="Backend drift in libyears" style="--value:100; --target:13.3">
+            <div class="gauge__head"><span>Backend drift (scale 0–15 libyears, target ≤ 2)</span><span class="gauge__value">&gt; 15</span></div>
+            <div class="gauge__track"><div class="gauge__fill"></div></div>
+          </div>
+          <div class="gauge gauge--ok" role="meter" aria-valuemin="0" aria-valuemax="15" aria-valuenow="0.5" aria-label="Frontend drift in libyears" style="--value:3.3; --target:13.3">
+            <div class="gauge__head"><span>Frontend drift (scale 0–15 libyears, target ≤ 2)</span><span class="gauge__value">&lt; 0.5</span></div>
+            <div class="gauge__track"><div class="gauge__fill"></div></div>
+          </div>
+          <ul class="signals">
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>&gt; 15 libyears of backend drift</strong>, concentrated in unused packages and the EOL runtime.</div></li>
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>HTTP-facing middleware outdated</strong> (Swashbuckle, with a known advisory).</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Selective maintenance.</strong> The frontend is kept current while the backend rots.</div></li>
+            <li class="signal signal--ok"><span class="pill pill--ok">ok</span><div><strong>Frontend drift under 0.5 libyears.</strong></div></li>
+          </ul>
+        </section>
+
+        <!-- ================= 09 ================= -->
+        <section class="section" id="index--quality-metrics" aria-labelledby="index--quality-metrics-title">
+          <h2 class="section__title" id="index--quality-metrics-title"><span class="section__num">09</span> Quality Metrics <span class="pill pill--critical">critical</span></h2>
+          <p class="section__summary">Three xUnit tests, all passing. No coverage tool is configured. Stryker is configured (<code>stryker-config.json</code>) but no mutation score was ever recorded. The tests assert counts and exceptions, not the returned data, which is how a real defect slips through (see <a href="#code-quality--defects">Code quality</a>).</p>
+          <div class="gauge gauge--warning" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="86" aria-label="Service methods exercised by tests" style="--value:86; --target:100">
+            <div class="gauge__head"><span>ParkService public methods exercised by tests</span><span class="gauge__value">6/7</span></div>
+            <div class="gauge__track"><div class="gauge__fill"></div></div>
+          </div>
+          <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Frontend files with tests" style="--value:0; --target:80">
+            <div class="gauge__head"><span>Frontend .tsx files with tests</span><span class="gauge__value">0/14</span></div>
+            <div class="gauge__track"><div class="gauge__fill"></div></div>
+          </div>
+          <p><span class="pill pill--na">not measured</span> Line coverage · <span class="pill pill--na">not measured</span> Mutation score</p>
+          <ul class="signals">
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>Coverage estimated under 40%</strong> across the solution: 3 tests, no test on the API, the console client or the frontend.</div></li>
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>No mutation baseline.</strong> Stryker is configured but never run in CI.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong><code>CanSpeciesCoexist</code> hardcodes 3 species</strong> (<code>Class1.cs:126-137</code>); any other pair returns <code>true</code>.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Tests share global static state.</strong> They reset <code>DataAccessLayer._db</code> with <code>DataAccessLayer.Init(new Database())</code>.</div></li>
+            <li class="signal signal--ok"><span class="pill pill--ok">ok</span><div><strong>Mutation tooling is present</strong>, only enforcement is missing.</div></li>
+          </ul>
+        </section>
+
+        <!-- ================= 10 ================= -->
+        <section class="section" id="index--hotspots" aria-labelledby="index--hotspots-title">
+          <h2 class="section__title" id="index--hotspots-title"><span class="section__num">10</span> Hotspots <span class="pill pill--critical">critical</span></h2>
+          <p class="section__summary">Change frequency crossed with structural complexity. The service file concentrates the risk; the controller multiplies the same error handling seven times. One author owns every production file.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>File</th><th>Complexity</th><th class="num">Commits</th><th>Primary author</th><th>Risk</th></tr></thead>
+              <tbody>
+                <tr><td><code>JurassicCode/Class1.cs</code></td><td>High: 7 methods, index loops, nesting 4, global state</td><td class="num">4</td><td>Yoan Thirion</td><td><span class="pill pill--critical">critical</span></td></tr>
+                <tr><td><code>JurassicCode.API/Controllers/ParkController.cs</code></td><td>Medium: 7 endpoints, 7 identical catch blocks</td><td class="num">5</td><td>Yoan Thirion</td><td><span class="pill pill--warning">warning</span></td></tr>
+                <tr><td><code>JurassicCode.Tests/Tests.cs</code></td><td>Medium: shared static state</td><td class="num">5</td><td>Yoan Thirion</td><td><span class="pill pill--warning">warning</span></td></tr>
+                <tr><td><code>JurassicCode/Db2/DataAccessLayer.cs</code></td><td>Medium: static class, public static field</td><td class="num">2</td><td>Yoan Thirion</td><td><span class="pill pill--warning">warning</span></td></tr>
+                <tr><td><code>JurassicCode/Init.cs</code></td><td>Low: seed data only, 277 lines</td><td class="num">2</td><td>Yoan Thirion</td><td><span class="pill pill--minor">minor</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="Production files owned by a single author" style="--value:100; --target:50">
+            <div class="gauge__head"><span>Production files owned by a single author (knowledge islands)</span><span class="gauge__value">100%</span></div>
+            <div class="gauge__track"><div class="gauge__fill"></div></div>
+          </div>
+          <ul class="signals">
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong><code>Class1.cs</code></strong>: highest complexity, direct global-state access everywhere, single author.</div></li>
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>Single author on all production code.</strong></div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Seven copy-pasted catch blocks</strong> in <code>ParkController</code>: any change to error handling touches every endpoint.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong><code>DataAccessLayer</code> has no direct test</strong> although it is the most dangerous class.</div></li>
+          </ul>
+        </section>
+
+        <!-- ================= 11 ================= -->
+        <section class="section" id="index--accessibility" aria-labelledby="index--accessibility-title">
+          <h2 class="section__title" id="index--accessibility-title"><span class="section__num">11</span> Accessibility <span class="pill pill--warning">warning</span></h2>
+          <p class="section__summary">The project is written in English, so <strong>WCAG 2.1 AA</strong> applies to <code>jurassic-ui</code>. The basics are right: <code>lang="en"</code>, a <code>&lt;main&gt;</code> landmark, real <code>&lt;button&gt;</code> elements and labelled form fields. The gaps are in the dynamic parts: the move dialog, tabs and focus styling. Static analysis only; contrast was not measured.</p>
+          <div class="gauge gauge--warning" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label="WCAG criteria passed" style="--value:50; --target:100">
+            <div class="gauge__head"><span>WCAG criteria checked and passed</span><span class="gauge__value">4/8</span></div>
+            <div class="gauge__track"><div class="gauge__fill"></div></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Criterion</th><th>Status</th><th>Evidence</th></tr></thead>
+              <tbody>
+                <tr><td>3.1.1 Language of Page (A)</td><td><span class="pill pill--ok">pass</span></td><td><code>index.html:2</code> <code>&lt;html lang="en"&gt;</code></td></tr>
+                <tr><td>1.3.1 Info and Relationships (A)</td><td><span class="pill pill--ok">pass</span></td><td><code>Layout.tsx:39</code> <code>&lt;main&gt;</code>; <code>&lt;Label htmlFor="toZone"&gt;</code> in <code>MoveDinosaurForm.tsx:82</code></td></tr>
+                <tr><td>2.1.1 Keyboard (A)</td><td><span class="pill pill--ok">pass</span></td><td>Actions are native <code>&lt;button&gt;</code> elements (<code>DinosaurCard.tsx:52</code>, styled <code>Tab</code>)</td></tr>
+                <tr><td>1.1.1 Non-text Content (A)</td><td><span class="pill pill--ok">pass</span></td><td>No <code>&lt;img&gt;</code> in components; decorative SVG is <code>aria-hidden</code></td></tr>
+                <tr><td>4.1.2 Name, Role, Value (A)</td><td><span class="pill pill--warning">fail</span></td><td>Close button is a bare <code>×</code> without <code>aria-label</code> (<code>MoveDinosaurForm.tsx:112</code>); tabs lack <code>role="tab"</code> / <code>aria-selected</code> (<code>Dinosaurs.tsx:136</code>)</td></tr>
+                <tr><td>2.4.3 Focus Order (A)</td><td><span class="pill pill--warning">fail</span></td><td>Modal is a <code>div</code> with no <code>role="dialog"</code>, no <code>aria-modal</code>, no focus trap or focus return (<code>styled/index.ts:334</code>)</td></tr>
+                <tr><td>2.4.1 Bypass Blocks (A)</td><td><span class="pill pill--warning">fail</span></td><td>No skip link before the navbar (<code>Layout.tsx</code>)</td></tr>
+                <tr><td>2.4.7 Focus Visible (AA)</td><td><span class="pill pill--warning">fail</span></td><td><code>outline: none</code> replaced by a 30%-opacity box-shadow on inputs and selects (<code>styled/index.ts:111,132</code>)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="signals">
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Inaccessible modal.</strong> Keyboard and screen-reader users can leave the move dialog without knowing it, and focus is not returned.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Unnamed close control</strong> (<code>×</code>) and <strong>unannounced tab state</strong>.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>No skip link</strong> to main content.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Weak focus indicator</strong> after removing the native outline.</div></li>
+            <li class="signal signal--ok"><span class="pill pill--ok">ok</span><div><strong>Semantic foundations</strong>: page language, landmark, native buttons, associated labels.</div></li>
+          </ul>
+        </section>
+
+        <!-- ================= 12 ================= -->
+        <section class="section" id="index--eco-design" aria-labelledby="index--eco-design-title">
+          <h2 class="section__title" id="index--eco-design-title"><span class="section__num">12</span> Eco-design <span class="pill pill--critical">critical</span></h2>
+          <p class="section__summary">English project, so the <strong>Web Sustainability Guidelines (WSG 1.0)</strong> apply. The app always fetches the whole park: every page load, every action and a 30-second polling loop call <code>GetAllZones</code>, which returns every zone with every dinosaur and has no pagination. Assets add avoidable requests.</p>
+          <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="33" aria-label="WSG practices met" style="--value:33; --target:100">
+            <div class="gauge__head"><span>WSG practices checked and met</span><span class="gauge__value">2/6</span></div>
+            <div class="gauge__track"><div class="gauge__fill"></div></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Practice</th><th>Status</th><th>Evidence</th></tr></thead>
+              <tbody>
+                <tr><td>Paginate and scope collection responses</td><td><span class="pill pill--critical">fail</span></td><td><code>GET /Park/GetAllZones</code> returns the full graph; called from 8 places across pages (<code>Zones.tsx</code>, <code>Dinosaurs.tsx</code>, <code>Dashboard.tsx</code>)</td></tr>
+                <tr><td>Event-driven updates over polling</td><td><span class="pill pill--warning">fail</span></td><td><code>setInterval(fetchData, 30000)</code> in <code>Dashboard.tsx:57</code></td></tr>
+                <tr><td>2.11 Efficient file formats</td><td><span class="pill pill--warning">fail</span></td><td>Custom font shipped as <code>.ttf</code> (<code>public/fonts/jurassic-park.ttf</code>, 41 KB) instead of WOFF2</td></tr>
+                <tr><td>Avoid unnecessary requests</td><td><span class="pill pill--warning">fail</span></td><td>Full-viewport <code>/images/jungle-background.jpg</code> and the favicon are referenced but <code>public/images/</code> does not exist: two 404s per load; 4 Roboto weights from Google Fonts on top of the custom font</td></tr>
+                <tr><td>Lean dependency tree</td><td><span class="pill pill--ok">pass</span></td><td>5 runtime dependencies (1 unused)</td></tr>
+                <tr><td>3.6 Caching of static assets</td><td><span class="pill pill--ok">pass</span></td><td>Vite emits hashed asset names, cacheable by any static host</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="signals">
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>Unbounded collection endpoint</strong> re-fetched after every action instead of fetching what changed.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Polling every 30 seconds</strong> on the dashboard, even when the tab is hidden.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Font payload</strong>: TTF instead of WOFF2, plus 4 remote Roboto weights.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Requests to missing assets</strong> (background image, favicon).</div></li>
+            <li class="signal signal--ok"><span class="pill pill--ok">ok</span><div><strong>Small, modern frontend stack</strong> with hashed static assets.</div></li>
+          </ul>
+        </section>
+
+        <!-- ================= 13 ================= -->
+        <section class="section" id="index--summary" aria-labelledby="index--summary-title">
+          <h2 class="section__title" id="index--summary-title"><span class="section__num">13</span> Summary</h2>
+
+          <h3>Top 3 risks</h3>
+          <ol class="steps">
+            <li><span class="pill pill--critical">critical</span> <strong>EOL runtime and vulnerable Swagger UI.</strong> <code>netcoreapp3.1</code> gets no security patches and <code>Swashbuckle 5.6.3</code> carries <code>GHSA-qrmm-w75w-3wpx</code>. A production risk as soon as the API is exposed.</li>
+            <li><span class="pill pill--critical">critical</span> <strong>Global mutable static state.</strong> <code>DataAccessLayer._db</code> is a public static field shared by every request, mutated without locking, and reset by every <code>new ParkService()</code>: the seed data written in <code>Program.InitializePark()</code> is wiped when DI creates its own instance.</li>
+            <li><span class="pill pill--critical">critical</span> <strong>Wrong data, green tests, no CI.</strong> <code>GetDinosaursInZone</code> returns dinosaurs with no species and every one flagged carnivorous, yet the tests pass because they only count items. Nothing runs them automatically.</li>
+          </ol>
+
+          <h3>Top 3 questions to validate with the team</h3>
+          <ol>
+            <li>Are <code>Confluent.Kafka</code> and <code>Polly</code> deliberate workshop "fossils", or leftovers of a planned feature?</li>
+            <li>Is the static <code>DataAccessLayer</code> an intentional legacy smell for the workshop, or should the exercise end with proper dependency injection?</li>
+            <li>Was the CI workflow removed on purpose as part of the exercise?</li>
+          </ol>
+
+          <h3>Recommended next actions</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Immediate</th><th>Short term</th><th>Medium term</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Upgrade Swashbuckle to 6.x+ and the runtime to .NET 8 LTS. Fix <code>DataAccessLayer.GetDinosaurs</code> to return stored entities.</td>
+                  <td>Replace the static <code>DataAccessLayer</code> with an injected repository; register <code>IParkService</code> once; make the modal accessible.</td>
+                  <td>CI with build, tests, coverage gate (≥ 80%) and Stryker gate. Rename <code>Class1.cs</code>, merge the partial class, drop unused packages, scope the zones endpoint.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Detailed analysis</h3>
+          <div class="dashboard">
+            <a class="card" href="#page-architecture"><span class="card__label">Architecture</span><strong>C4 model</strong><span class="card__desc">Context, Container, Component and Code diagrams, with assumptions and rendering check.</span></a>
+            <a class="card" href="#page-flow-move-dinosaur"><span class="card__label">Flow</span><strong>Move a dinosaur</strong><span class="card__desc">End-to-end sequence, step by step, business rules and risks.</span></a>
+            <a class="card" href="#page-backlog"><span class="card__label">Backlog</span><strong>9 features</strong><span class="card__desc">User stories with Gherkin acceptance criteria and examples.</span></a>
+            <a class="card" href="#page-code-quality"><span class="card__label">Code quality</span><strong>Grade F</strong><span class="card__desc">14 smells located, explained and paired with a refactoring.</span></a>
+          </div>
+        </section></div>
+</section>
+<section class="print-page" id="page-architecture" aria-label="Architecture">
+<div class="hero"><span class="hero__eyebrow">Architecture</span>
+      <h1 class="hero__title">Architecture — jurassic-code</h1>
+      <p class="hero__meta">Analyzed 2026-03-09 · C4 model · Skill by <a href="https://github.com/ythirion/">Yoan Thirion</a></p></div>
+<div class="layout"><p class="callout">AI-inferred from code — validate with the team before sharing externally.</p>
+
+        <section class="section" id="architecture--level-1" aria-labelledby="architecture--level-1-title">
+          <h2 class="section__title" id="architecture--level-1-title"><span class="section__num">L1</span> System context</h2>
+          <p class="section__summary">One system, three kinds of park staff, no external system. Everything (UI, API, storage) runs on the developer machine; there is no authentication.</p>
+          <figure class="diagram" id="architecture--c4-context">
+            <figcaption>C4 · Level 1 · System context <span class="pill pill--na" data-render-status>rendering…</span></figcaption>
+            <pre class="mermaid">
+C4Context
+  title System context - Jurassic Park management
+  %% ASSUMPTION: the three roles are inferred from the domain vocabulary, the code has no roles or authentication
+  Person(operator, "Park operator", "Manages zones and dinosaur placement")
+  Person(ranger, "Park ranger", "Monitors zone status")
+  Person(vet, "Park veterinarian", "Watches sick dinosaurs")
+  System(jurassic, "Jurassic Code", "Manage zones, add and move dinosaurs, check species compatibility")
+  Rel(operator, jurassic, "Uses", "Browser")
+  Rel(ranger, jurassic, "Uses", "Browser")
+  Rel(vet, jurassic, "Uses", "Browser")
+</pre>
+          </figure>
+        </section>
+
+        <section class="section" id="architecture--level-2" aria-labelledby="architecture--level-2-title">
+          <h2 class="section__title" id="architecture--level-2-title"><span class="section__num">L2</span> Containers</h2>
+          <p class="section__summary">A React SPA talks to an ASP.NET Core API through the Vite dev proxy. The "database" is a dictionary held in a static field: the API and the VB.NET console client each get their own copy in their own process, nothing is shared and nothing is persisted.</p>
+          <figure class="diagram" id="architecture--c4-container">
+            <figcaption>C4 · Level 2 · Containers <span class="pill pill--na" data-render-status>rendering…</span></figcaption>
+            <pre class="mermaid">
+C4Container
+  title Containers - Jurassic Code
+  Person(user, "Park staff", "Browser user")
+  System_Boundary(sys, "Jurassic Code") {
+    Container(ui, "jurassic-ui", "React 19, TypeScript, Vite", "SPA: dashboard, zones, dinosaurs, compatibility")
+    Container(api, "JurassicCode.API", "ASP.NET Core, netcoreapp3.1", "REST API and Swagger UI")
+    Container(console, "JurrassicCode.Console", "VB.NET, netcoreapp3.1", "Legacy console client")
+    ContainerDb(store, "In-memory store", "Static Dictionary", "DataAccessLayer._db, one copy per process, lost on restart")
+  }
+  Rel(user, ui, "Uses", "HTTP, localhost:3000")
+  Rel(ui, api, "Calls /api via Vite proxy", "JSON over HTTPS, localhost:5001")
+  Rel(api, store, "Reads and mutates", "static field")
+  Rel(console, store, "Reads and mutates", "static field")
+</pre>
+          </figure>
+        </section>
+
+        <section class="section" id="architecture--level-3" aria-labelledby="architecture--level-3-title">
+          <h2 class="section__title" id="architecture--level-3-title"><span class="section__num">L3</span> Components of the API</h2>
+          <p class="section__summary">Read it from left to right: the controller depends on the service through DI, but <code>Program</code> also news up its own <code>ParkService</code>, and every instance resets the static store. Below the service, encapsulation is bypassed twice: a public static field and reflection on a private field.</p>
+          <figure class="diagram" id="architecture--c4-component">
+            <figcaption>C4 · Level 3 · Components <span class="pill pill--na" data-render-status>rendering…</span></figcaption>
+            <pre class="mermaid">
+C4Component
+  title Components - JurassicCode.API and domain library
+  Container_Boundary(api, "JurassicCode.API") {
+    Component(ctrl, "ParkController", "ApiController", "7 endpoints, identical catch blocks returning 500")
+    Component(startup, "Startup", "ASP.NET Core", "DI, CORS, Swagger")
+    Component(program, "Program", "Entry point", "Seeds the park with new ParkService()")
+  }
+  Container_Boundary(domain, "JurassicCode") {
+    Component(svc, "ParkService", "partial class, Class1.cs and Init.cs", "Zones, dinosaurs, moves, coexistence")
+    Component(dal, "DataAccessLayer", "static class", "Owns public static Database _db")
+    Component(db, "Database", "class", "Zones dictionary (public), dinosaurs dictionary (private)")
+    Component(refl, "ReflectionHelper", "static class", "Reads private fields")
+  }
+  Rel(ctrl, svc, "Calls", "constructor injection")
+  Rel(startup, svc, "Registers", "AddSingleton(ParkService)")
+  Rel(program, svc, "Instantiates", "new ParkService(), outside DI")
+  Rel(svc, dal, "Calls and mutates _db", "static access")
+  Rel(dal, db, "Reads and writes", "_db.Zones")
+  Rel(db, refl, "Exposes _dinosaurs via", "GetPrivateField")
+</pre>
+          </figure>
+        </section>
+
+        <section class="section" id="architecture--level-4" aria-labelledby="architecture--level-4-title">
+          <h2 class="section__title" id="architecture--level-4-title"><span class="section__num">L4</span> Code: ParkService and persistence</h2>
+          <p class="section__summary">The domain model (<code>Dinosaur</code>, <code>Zone</code>) and the persistence model (<code>DinosaurEntity</code>, <code>ZoneEntity</code>) carry the same data under different, sometimes inverted, names. <code>ParkService</code> cannot be instantiated without touching the static store.</p>
+          <figure class="diagram" id="architecture--c4-code">
+            <figcaption>C4 · Level 4 · Code <span class="pill pill--na" data-render-status>rendering…</span></figcaption>
+            <pre class="mermaid">
+classDiagram
+  direction LR
+  class IParkService {
+    &lt;&lt;interface&gt;&gt;
+    +AddZone(name, isOpen)
+    +AddDinosaurToZone(zoneName, dinosaur)
+    +MoveDinosaur(from, to, name)
+    +ToggleZone(zoneName)
+    +CanSpeciesCoexist(s1, s2) bool
+    +GetDinosaursInZone(zoneName) IEnumerable~Dinosaur~
+    +GetAllZones() IEnumerable~Zone~
+  }
+  class ParkService {
+    +ParkService()
+    -Init()
+  }
+  class DataAccessLayer {
+    &lt;&lt;static&gt;&gt;
+    +Database _db$
+    +Init()$
+    +SaveZone(zone)$
+    +SaveDinosaur(zoneCode, entity)$
+    +GetDinosaurs(zoneCode)$
+    +GetDinosaurByName(name)$
+  }
+  class Database {
+    +Dictionary~string,ZoneEntity~ Zones
+    -Dictionary~string,DinosaurEntity~ _dinosaurs
+    +Dinosaurs(db)$
+  }
+  class ReflectionHelper {
+    &lt;&lt;static&gt;&gt;
+    +GetPrivateField(obj, fieldName)$ object
+  }
+  class Dinosaur {
+    +string Name
+    +string Species
+    +bool IsCarnivorous
+    +bool IsSick
+    +DateTime LastFed
+  }
+  class DinosaurEntity {
+    +string CodeName
+    +string Species
+    +bool IsVegan
+    +string HealthStatus
+    +DateTime FeedingTime
+  }
+  class Zone {
+    +string Name
+    +bool IsOpen
+    +List~Dinosaur~ Dinosaurs
+  }
+  class ZoneEntity {
+    +string ZoneCode
+    +bool AccessStatus
+    +List~string~ DinosaurCodes
+  }
+  ParkService ..|&gt; IParkService
+  ParkService ..&gt; DataAccessLayer : static calls
+  ParkService ..&gt; ZoneEntity : mutates directly
+  DataAccessLayer --&gt; Database : _db
+  Database ..&gt; ReflectionHelper : reads own private field
+  Dinosaur .. DinosaurEntity : mapped, inverted IsCarnivorous / IsVegan
+  Zone .. ZoneEntity : mapped
+</pre>
+          </figure>
+          <p class="callout callout--critical"><strong>Key structural problem.</strong> <code>Database</code> makes <code>_dinosaurs</code> private, then exposes it through <code>ReflectionHelper.GetPrivateField()</code> (<code>Database.cs:10</code>). The class breaks its own contract, and <code>ParkService</code> goes around the data layer anyway by mutating <code>ZoneEntity</code> instances it reads from <code>_db</code>.</p>
+        </section>
+
+        <section class="section" id="architecture--assumptions" aria-labelledby="architecture--assumptions-title">
+          <h2 class="section__title" id="architecture--assumptions-title">Assumptions</h2>
+          <ul>
+            <li>The three roles (operator, ranger, veterinarian) are inferred from the vocabulary of the UI and models; the code has no roles or authentication.</li>
+            <li>The console client is assumed to be a legacy tool kept for the workshop; nothing in the API calls it.</li>
+            <li>The Vite proxy target <code>https://localhost:5001</code> is assumed to be the only supported way to reach the API in development.</li>
+          </ul>
+        </section>
+
+        <section class="section" id="architecture--rendering-check" aria-labelledby="architecture--rendering-check-title">
+          <h2 class="section__title" id="architecture--rendering-check-title">Rendering check <span class="pill pill--ok">5/5 rendered</span></h2>
+          <p>Validated with <code>scripts/validate_diagrams.py</code> (headless Chrome, embedded Mermaid 12.3.0).</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Diagram</th><th>Type</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><a href="#architecture--c4-context">L1 System context</a></td><td><code>C4Context</code></td><td><span class="pill pill--ok">rendered</span></td></tr>
+                <tr><td><a href="#architecture--c4-container">L2 Containers</a></td><td><code>C4Container</code></td><td><span class="pill pill--ok">rendered</span></td></tr>
+                <tr><td><a href="#architecture--c4-component">L3 Components</a></td><td><code>C4Component</code></td><td><span class="pill pill--ok">rendered</span></td></tr>
+                <tr><td><a href="#architecture--c4-code">L4 Code</a></td><td><code>classDiagram</code></td><td><span class="pill pill--ok">rendered</span></td></tr>
+                <tr><td><a href="#flow-move-dinosaur--sequence">Flow: move a dinosaur</a></td><td><code>sequenceDiagram</code></td><td><span class="pill pill--ok">rendered</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section></div>
+</section>
+<section class="print-page" id="page-flow-move-dinosaur" aria-label="Flow: move a dinosaur">
+<div class="hero"><span class="hero__eyebrow">Flow</span>
+      <h1 class="hero__title">Move a dinosaur between zones</h1>
+      <p class="hero__meta">Analyzed 2026-03-09 · UI → API → domain → in-memory store · Skill by <a href="https://github.com/ythirion/">Yoan Thirion</a></p></div>
+<div class="layout"><section class="section" id="flow-move-dinosaur--why" aria-labelledby="flow-move-dinosaur--why-title">
+          <h2 class="section__title" id="flow-move-dinosaur--why-title">Why this flow</h2>
+          <p class="section__summary">Moving a dinosaur is the only use case that crosses every layer (React form, API client, Vite proxy, controller, service, static store) and then refreshes the whole park. It runs through the main hotspot (<code>Class1.cs</code>) and is where the park's core safety rule, species compatibility, should apply.</p>
+          <p class="callout"><strong>Entry points:</strong> the "Move" button of <code>DinosaurCard.tsx:52</code>, rendered on the Dinosaurs and Zones pages · <code>POST /Park/MoveDinosaur</code> (<code>ParkController.cs:58</code>).</p>
+        </section>
+
+        <section class="section" id="flow-move-dinosaur--sequence-section" aria-labelledby="flow-move-dinosaur--sequence-title">
+          <h2 class="section__title" id="flow-move-dinosaur--sequence-title">Sequence</h2>
+          <figure class="diagram" id="flow-move-dinosaur--sequence">
+            <figcaption>Sequence · Move a dinosaur <span class="pill pill--na" data-render-status>rendering…</span></figcaption>
+            <pre class="mermaid">
+sequenceDiagram
+  actor K as Park keeper
+  participant Card as DinosaurCard
+  participant Page as Dinosaurs page
+  participant Form as MoveDinosaurForm
+  participant Client as JurassicParkClient
+  participant Proxy as Vite proxy
+  participant Ctrl as ParkController
+  participant Svc as ParkService
+  participant DB as DataAccessLayer._db
+
+  K->>Card: click "Move"
+  Card->>Page: onMove(name)
+  Page->>Form: open modal (zones, dinosaurName, currentZone)
+  Note over Form: destination list excludes the current zone
+  K->>Form: pick destination, "Confirm Transfer"
+  alt no destination selected
+    Form-->>K: error "Please select a destination zone."
+  else destination selected
+    Form->>Client: moveDinosaur(fromZoneName, toZoneName, dinosaurName)
+    Client->>Proxy: POST /api/Park/MoveDinosaur
+    Proxy->>Ctrl: POST /Park/MoveDinosaur (https://localhost:5001)
+    Ctrl->>Svc: MoveDinosaur(from, to, name)
+    loop for i in 0..Zones.Count (ElementAt(i))
+      Svc->>DB: read Zones.ElementAt(i)
+    end
+    Note over Svc: source must exist, destination must exist AND be open. Species compatibility is NOT checked.
+    alt source missing or destination missing or closed
+      Svc-->>Ctrl: throw Exception("Zones are closed or do not exist.")
+      Ctrl-->>Client: 500 "Error moving dinosaur: ..."
+      Client-->>Form: throw Error("API error (500): ...")
+      Form-->>K: error AlertBox
+    else zones valid
+      Svc->>DB: fromZone.DinosaurCodes.RemoveAt(j)
+      Svc->>DB: toZone.DinosaurCodes.Add(name)
+      Note over Svc,DB: side effect on shared static state, no lock. If the name is not in the source zone nothing moves, yet the call succeeds.
+      Svc-->>Ctrl: return
+      Ctrl-->>Client: 200 "Dinosaur moved successfully."
+      Client-->>Form: message
+      Form-->>K: success AlertBox
+      Note over Form: setTimeout 1500 ms
+      Form->>Page: onMoveSuccess() then onClose()
+      Page->>Client: getAllZones()
+      Client->>Ctrl: GET /Park/GetAllZones
+      Ctrl-->>Page: every zone with every dinosaur
+    end
+  end
+</pre>
+          </figure>
+        </section>
+
+        <section class="section" id="flow-move-dinosaur--steps" aria-labelledby="flow-move-dinosaur--steps-title">
+          <h2 class="section__title" id="flow-move-dinosaur--steps-title">Step by step</h2>
+          <ol class="steps">
+            <li><strong>UI trigger.</strong> <code>DinosaurCard.tsx:52</code> calls <code>onMove(dinosaur.name)</code>; the page stores <code>{ name, zone }</code> in <code>selectedDinosaur</code> and renders <code>MoveDinosaurForm</code> (<code>Dinosaurs.tsx:253</code>).</li>
+            <li><strong>Client-side validation.</strong> <code>MoveDinosaurForm.tsx:27</code> removes the current zone from the options; <code>:36</code> rejects an empty destination. Closed zones are still listed.</li>
+            <li><strong>Mapping to the request.</strong> <code>MoveDinosaurForm.tsx:40</code> builds <code>MoveDinosaurRequest { fromZoneName, toZoneName, dinosaurName }</code> from component props, no ids.</li>
+            <li><strong>HTTP call.</strong> <code>api.ts:70</code> posts JSON to <code>/api/Park/MoveDinosaur</code> with <code>credentials: 'include'</code>; <code>vite.config.ts</code> rewrites <code>/api</code> and forwards to <code>https://localhost:5001</code> with <code>secure: false</code>.</li>
+            <li><strong>Controller.</strong> <code>ParkController.cs:58</code> forwards the three strings to the service; any exception becomes a <code>500</code> with the message in plain text, business errors included.</li>
+            <li><strong>Zone lookup.</strong> <code>Class1.cs:74-84</code> scans the dictionary with <code>ElementAt(i)</code> in a <code>for</code> loop (quadratic) instead of <code>TryGetValue</code>. Source is matched by key without checking it is open; destination by key and <code>AccessStatus == true</code>.</li>
+            <li><strong>Mutation.</strong> <code>Class1.cs:89-102</code> removes the code from the source list and adds it to the destination list, directly on <code>ZoneEntity</code> instances owned by the static store. The <code>DinosaurEntity</code> itself is untouched.</li>
+            <li><strong>Silent no-op.</strong> If the dinosaur is not in the source zone, <code>dinosaur</code> stays <code>null</code> (<code>Class1.cs:99</code>), nothing moves, and the API still answers <code>200</code>.</li>
+            <li><strong>Refresh.</strong> After a fixed 1.5 s delay (<code>MoveDinosaurForm.tsx:50</code>), the page reloads the whole park with <code>getAllZones()</code> (<code>Dinosaurs.tsx:74</code>).</li>
+          </ol>
+        </section>
+
+        <section class="section" id="flow-move-dinosaur--rules" aria-labelledby="flow-move-dinosaur--rules-title">
+          <h2 class="section__title" id="flow-move-dinosaur--rules-title">Business rules</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Rule</th><th>Where enforced</th><th>Tested?</th></tr></thead>
+              <tbody>
+                <tr><td>A destination must be selected</td><td>UI only, <code>MoveDinosaurForm.tsx:36</code></td><td><span class="pill pill--warning">no</span></td></tr>
+                <tr><td>Destination differs from source</td><td>UI only, <code>MoveDinosaurForm.tsx:27</code></td><td><span class="pill pill--warning">no</span></td></tr>
+                <tr><td>Destination exists and is open</td><td><code>Class1.cs:80</code></td><td><span class="pill pill--ok">yes</span> <code>Tests.cs:28</code></td></tr>
+                <tr><td>Source zone exists</td><td><code>Class1.cs:76</code></td><td><span class="pill pill--warning">no</span></td></tr>
+                <tr><td>Dinosaur is in the source zone</td><td>Not enforced: silent no-op, <code>Class1.cs:99</code></td><td><span class="pill pill--critical">no</span></td></tr>
+                <tr><td>Species can coexist in the destination</td><td>Not enforced: <code>CanSpeciesCoexist</code> exists but is never called on a move</td><td><span class="pill pill--critical">no</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section" id="flow-move-dinosaur--risks" aria-labelledby="flow-move-dinosaur--risks-title">
+          <h2 class="section__title" id="flow-move-dinosaur--risks-title">Risks on this flow <span class="pill pill--critical">critical</span></h2>
+          <ul class="signals">
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>No compatibility check.</strong> A T-Rex can be moved into a Velociraptor or Triceratops zone; the park's main safety rule lives only on a separate "Compatibility" page.</div></li>
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>Unsynchronised mutation of shared static state.</strong> Two concurrent moves can corrupt the <code>DinosaurCodes</code> lists.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>False success.</strong> Moving a dinosaur that is not in the source zone returns <code>200</code>.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Every business error is a <code>500</code>.</strong> Clients cannot tell a closed zone from a crash.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>Over-fetching after each move.</strong> The entire park is reloaded to reflect a change in two lists.</div></li>
+          </ul>
+        </section></div>
+</section>
+<section class="print-page" id="page-backlog" aria-label="Backlog">
+<div class="hero"><span class="hero__eyebrow">Product backlog</span>
+      <h1 class="hero__title">Product backlog — jurassic-code</h1>
+      <p class="hero__meta">Analyzed 2026-03-09 · reverse-engineered from routes, services and tests · Skill by <a href="https://github.com/ythirion/">Yoan Thirion</a></p></div>
+<div class="layout"><p class="callout">AI-inferred from code — validate with product owners before use.</p>
+
+        <div class="dashboard">
+          <div class="card">
+            <span class="card__label">Features</span>
+            <span class="card__number">9</span>
+            <span class="card__desc">in 5 business domains</span>
+          </div>
+          <div class="card">
+            <span class="card__label">Coverage by tests</span>
+            <div class="gauge gauge--warning" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="67" aria-label="Features with at least one test" style="--value:67; --target:100">
+              <div class="gauge__head"><span>Features with a test</span><span class="gauge__value">6/9</span></div>
+              <div class="gauge__track"><div class="gauge__fill"></div></div>
+            </div>
+            <span class="card__desc">One tested feature returns wrong data (feature 6)</span>
+          </div>
+          <div class="card">
+            <span class="card__label">Incomplete or defective</span>
+            <span class="card__number">4</span>
+            <span class="card__desc">features 6, 7, 8 and 9</span>
+          </div>
+        </div>
+
+        <!-- ============ Zones ============ -->
+        <section class="section" id="backlog--zones" aria-labelledby="backlog--zones-title">
+          <h2 class="section__title" id="backlog--zones-title">Zone management</h2>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">1. Create a park zone</h3><span class="pill pill--ok">tested</span></div>
+            <p class="item__loc">POST /Park/AddZone · ParkService.AddZone · Class1.cs:27</p>
+            <p class="story">As a park operator, I want to create a new zone so that I can organize dinosaurs into separately managed areas.</p>
+<pre><code>Scenario: Create an open zone
+  Given the park has no zone named "Ismaloya Mountains"
+  When I create a zone "Ismaloya Mountains" that is open
+  Then the zone appears in the list of all zones
+  And the zone is open
+
+Scenario: Reject a duplicate zone
+  Given a zone named "Western Ridge" already exists
+  When I create another zone named "Western Ridge"
+  Then the error "Zone already exists." is returned
+
+Examples:
+  | name          | isOpen | expected                  |
+  | Main Temple   | true   | created                   |
+  | Western Ridge | true   | error: already exists     |
+  | Quarantine    | false  | created as a closed zone  |</code></pre>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">2. Open or close a zone</h3><span class="pill pill--ok">tested</span></div>
+            <p class="item__loc">POST /Park/ToggleZone · ParkService.ToggleZone · Class1.cs:110</p>
+            <p class="story">As a park safety officer, I want to toggle a zone between open and closed so that I can restrict dinosaur movements during incidents.</p>
+<pre><code>Scenario Outline: Toggle a zone
+  Given zone "&lt;zone&gt;" is &lt;before&gt;
+  When I toggle zone "&lt;zone&gt;"
+  Then zone "&lt;zone&gt;" is &lt;after&gt;
+
+Examples:
+  | zone          | before | after  |
+  | Western Ridge | open   | closed |
+  | Eastern Ridge | closed | open   |</code></pre>
+            <p><span class="pill pill--warning">gap</span> Toggling an unknown zone silently does nothing (<code>Class1.cs:112-119</code>).</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">3. List all zones</h3><span class="pill pill--warning">untested</span></div>
+            <p class="item__loc">GET /Park/GetAllZones · ParkService.GetAllZones · Class1.cs:166</p>
+            <p class="story">As a park ranger, I want to see every zone with its dinosaurs so that I can monitor the park at a glance.</p>
+<pre><code>Scenario: Retrieve all zones with their dinosaurs
+  Given zones "Ismaloya Mountains", "Western Ridge" and "Eastern Ridge" exist
+  And "Western Ridge" holds "Blue" and "Charlie"
+  When I request all zones
+  Then I receive 3 zones
+  And "Western Ridge" lists "Blue" and "Charlie" with species, diet, health and last feeding time</code></pre>
+          </article>
+        </section>
+
+        <!-- ============ Dinosaurs ============ -->
+        <section class="section" id="backlog--dinosaurs" aria-labelledby="backlog--dinosaurs-title">
+          <h2 class="section__title" id="backlog--dinosaurs-title">Dinosaur management</h2>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">4. Add a dinosaur to a zone</h3><span class="pill pill--ok">tested</span></div>
+            <p class="item__loc">POST /Park/AddDinosaurToZone · ParkService.AddDinosaurToZone · Class1.cs:41</p>
+            <p class="story">As a park keeper, I want to assign a dinosaur to an open zone so that I can track where each animal lives.</p>
+<pre><code>Scenario: Add a dinosaur to an open zone
+  Given zone "Ismaloya Mountains" is open
+  When I add "Rexy" (T-Rex, carnivorous) to "Ismaloya Mountains"
+  Then "Rexy" is listed in "Ismaloya Mountains"
+
+Scenario: Reject a closed or unknown zone
+  When I add "&lt;dinosaur&gt;" to "&lt;zone&gt;"
+  Then the error "Zone is closed or does not exist." is returned
+
+Examples:
+  | dinosaur | zone       | zone state |
+  | Stego    | Quarantine | closed     |
+  | Dino     | Atlantis   | missing    |</code></pre>
+            <p><span class="pill pill--warning">gap</span> Adding a dinosaur whose name already exists throws a raw dictionary exception (<code>DataAccessLayer.cs:32</code>).</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">5. Move a dinosaur between zones</h3><span class="pill pill--ok">tested</span></div>
+            <p class="item__loc">POST /Park/MoveDinosaur · ParkService.MoveDinosaur · Class1.cs:69 · <a href="#page-flow-move-dinosaur">detailed flow</a></p>
+            <p class="story">As a park keeper, I want to move a dinosaur to another open zone so that I can respond to safety or habitat needs.</p>
+<pre><code>Scenario: Move to an open zone
+  Given "TestDino1" is in "Test Zone 1"
+  And "Test Zone 2" is open
+  When I move "TestDino1" from "Test Zone 1" to "Test Zone 2"
+  Then "TestDino1" is in "Test Zone 2"
+  And "TestDino1" is no longer in "Test Zone 1"
+
+Scenario: Reject a closed or unknown destination
+  When I move "TestDino1" from "Test Zone 1" to "&lt;destination&gt;"
+  Then the error "Zones are closed or do not exist." is returned
+
+Examples:
+  | destination       | state   |
+  | Test Zone 3       | closed  |
+  | Non-Existent Zone | missing |</code></pre>
+            <p><span class="pill pill--critical">gap</span> Species compatibility is not checked, and a dinosaur absent from the source zone "moves" successfully without moving.</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">6. List dinosaurs in a zone</h3><span class="pill pill--critical">defect</span></div>
+            <p class="item__loc">POST /Park/GetDinosaursInZone · ParkService.GetDinosaursInZone · Class1.cs:141 · DataAccessLayer.cs:41</p>
+            <p class="story">As a park ranger, I want to see the dinosaurs of one zone so that I can check its population and health.</p>
+<pre><code>Scenario: Retrieve the dinosaurs of a zone
+  Given "Ismaloya Mountains" holds "Rexy" (T-Rex), "Bucky" (Triceratops) and "Echo" (Velociraptor)
+  When I request the dinosaurs of "Ismaloya Mountains"
+  Then I receive 3 dinosaurs
+  And "Bucky" has species "Triceratops" and is not carnivorous
+
+Scenario: Unknown zone
+  When I request the dinosaurs of "Ghost Zone"
+  Then the error "Zone does not exist." is returned</code></pre>
+            <p class="callout callout--critical"><strong>Defect.</strong> <code>DataAccessLayer.GetDinosaurs</code> builds new entities holding only <code>CodeName</code>. Every dinosaur comes back with no species, flagged carnivorous, never sick, and fed on <code>0001-01-01</code>. The second "Then" fails today; the existing tests only count items.</p>
+          </article>
+        </section>
+
+        <!-- ============ Safety ============ -->
+        <section class="section" id="backlog--safety" aria-labelledby="backlog--safety-title">
+          <h2 class="section__title" id="backlog--safety-title">Safety</h2>
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">7. Check species coexistence</h3><span class="pill pill--warning">incomplete</span></div>
+            <p class="item__loc">POST /Park/CanSpeciesCoexist · ParkService.CanSpeciesCoexist · Class1.cs:122</p>
+            <p class="story">As a park safety officer, I want to check whether two species can share a zone so that I can prevent attacks.</p>
+<pre><code>Scenario Outline: Check a pair of species
+  When I check whether "&lt;species1&gt;" and "&lt;species2&gt;" can coexist
+  Then the answer is &lt;expected&gt;
+
+Examples:
+  | species1      | species2     | expected | covered by a test |
+  | T-Rex         | Velociraptor | false    | yes               |
+  | Triceratops   | Velociraptor | true     | yes               |
+  | T-Rex         | Triceratops  | false    | no                |
+  | Brachiosaurus | Stegosaurus  | true     | no (default)      |</code></pre>
+            <p><span class="pill pill--warning">gap</span> Only three species names are known; seed data uses "Tyrannosaurus Rex" (<code>Program.cs:37</code>), which the rule does not recognise.</p>
+          </article>
+        </section>
+
+        <!-- ============ Health ============ -->
+        <section class="section" id="backlog--health" aria-labelledby="backlog--health-title">
+          <h2 class="section__title" id="backlog--health-title">Health monitoring</h2>
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">8. Flag sick dinosaurs</h3><span class="pill pill--warning">untested</span></div>
+            <p class="item__loc">Dinosaur.IsSick ↔ DinosaurEntity.HealthStatus · DinosaurCard.tsx</p>
+            <p class="story">As a park veterinarian, I want to identify sick dinosaurs so that I can prioritise care.</p>
+<pre><code>Scenario: A sick dinosaur is flagged
+  Given "Charlie" (Velociraptor) is sick and lives in "Western Ridge"
+  When I list all zones
+  Then "Charlie" is shown with "Medical Attention Required"</code></pre>
+            <p><span class="pill pill--warning">partial</span> Stored and displayed only; no endpoint, alert or rule acts on it.</p>
+          </article>
+        </section>
+
+        <!-- ============ Feeding ============ -->
+        <section class="section" id="backlog--feeding" aria-labelledby="backlog--feeding-title">
+          <h2 class="section__title" id="backlog--feeding-title">Feeding</h2>
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">9. Track the last feeding time</h3><span class="pill pill--warning">untested</span></div>
+            <p class="item__loc">Dinosaur.LastFed ↔ DinosaurEntity.FeedingTime</p>
+            <p class="story">As a park keeper, I want to see when each dinosaur was last fed so that I can schedule feeding rounds.</p>
+<pre><code>Scenario: Feeding time is kept
+  Given "Charlie" was last fed on 2026-03-08
+  When I list all zones
+  Then "Charlie" shows a last feeding time of 2026-03-08</code></pre>
+            <p><span class="pill pill--warning">partial</span> Stored and mapped; no feeding endpoint or threshold.</p>
+          </article>
+        </section></div>
+</section>
+<section class="print-page" id="page-code-quality" aria-label="Code quality">
+<div class="hero"><span class="hero__eyebrow">Code quality</span>
+      <h1 class="hero__title">Code quality — jurassic-code</h1>
+      <p class="hero__meta">Analyzed 2026-03-09 · backend C# focus · Skill by <a href="https://github.com/ythirion/">Yoan Thirion</a></p></div>
+<div class="layout"><div class="dashboard">
+          <div class="card card--hero">
+            <span class="grade grade--f">F</span>
+            <div>
+              <p class="card__label">Overall grade</p>
+              <p class="card__number">14 smells</p>
+              <p class="card__desc">Small and readable, but built on global mutable state and broken encapsulation. Most smells sit in two files: <code>Class1.cs</code> and <code>Db2/</code>.</p>
+            </div>
+          </div>
+          <div class="card">
+            <span class="card__label">By priority</span>
+            <div class="gauge gauge--critical" role="meter" aria-valuemin="0" aria-valuemax="14" aria-valuenow="5" aria-label="Critical smells" style="--value:36">
+              <div class="gauge__head"><span>Critical</span><span class="gauge__value">5</span></div>
+              <div class="gauge__track"><div class="gauge__fill"></div></div>
+            </div>
+            <div class="gauge gauge--warning" role="meter" aria-valuemin="0" aria-valuemax="14" aria-valuenow="5" aria-label="Significant smells" style="--value:36">
+              <div class="gauge__head"><span>Significant</span><span class="gauge__value">5</span></div>
+              <div class="gauge__track"><div class="gauge__fill"></div></div>
+            </div>
+            <div class="gauge" role="meter" aria-valuemin="0" aria-valuemax="14" aria-valuenow="4" aria-label="Minor smells" style="--value:29">
+              <div class="gauge__head"><span>Minor</span><span class="gauge__value">4</span></div>
+              <div class="gauge__track"><div class="gauge__fill"></div></div>
+            </div>
+          </div>
+          <a class="card card--accent" href="#code-quality--global-data">
+            <span class="card__label">Recommended starting point</span>
+            <strong>Global Data in DataAccessLayer</strong>
+            <span class="card__desc">Removing the static store unlocks DI, isolated tests, and fixes the reset bug.</span>
+          </a>
+        </div>
+
+        <!-- ============ Defects ============ -->
+        <section class="section" id="code-quality--defects" aria-labelledby="code-quality--defects-title">
+          <h2 class="section__title" id="code-quality--defects-title">Defects spotted while reviewing <span class="pill pill--critical">3</span></h2>
+          <p class="section__summary">Not smells but behaviour bugs, found by reading the code. Each one is invisible to the current tests.</p>
+          <ul class="signals">
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>Data loss when listing a zone.</strong> <code>DataAccessLayer.GetDinosaurs</code> (<code>DataAccessLayer.cs:41</code>) returns <code>new DinosaurEntity { CodeName = code }</code>: species, diet, health and feeding time are dropped, so <code>GetDinosaursInZone</code> reports every dinosaur as a carnivore of unknown species.</div></li>
+            <li class="signal signal--critical"><span class="pill pill--critical">critical</span><div><strong>Seed data wiped at first request.</strong> <code>Program.InitializePark()</code> seeds four zones through <code>new ParkService()</code>; the DI singleton then runs the same constructor (<code>Class1.cs:23</code>), which calls <code>DataAccessLayer.Init()</code> and replaces the store with the three zones of <code>Init.cs</code>. "Main Temple" never reaches the UI.</div></li>
+            <li class="signal signal--warning"><span class="pill pill--warning">warning</span><div><strong>False success on move.</strong> <code>MoveDinosaur</code> returns normally when the dinosaur is not in the source zone (<code>Class1.cs:99</code>). See the <a href="#page-flow-move-dinosaur">flow</a>.</div></li>
+          </ul>
+        </section>
+
+        <!-- ============ Coupling ============ -->
+        <section class="section" id="code-quality--coupling" aria-labelledby="code-quality--coupling-title">
+          <h2 class="section__title" id="code-quality--coupling-title">Coupling / cohesion</h2>
+
+          <article class="item" id="code-quality--global-data">
+            <div class="item__head"><h3 class="item__title">Global Data</h3><span class="pill pill--critical">critical</span></div>
+            <p class="item__loc">Db2/DataAccessLayer.cs:7 · DataAccessLayer._db</p>
+            <p>The whole park lives in <code>public static Database _db</code>. Every request, every test and every service instance reads and writes the same object, with no lock and no way to substitute it.</p>
+<pre><code>public static class DataAccessLayer
+{
+    public static Database _db;
+    public static void Init() =&gt; _db = new Database();</code></pre>
+            <p><strong>Refactoring:</strong> Encapsulate Variable, then Replace Static with Instance: introduce an <code>IParkRepository</code> owning the dictionaries, register it as a singleton, inject it into <code>ParkService</code>.</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Mutable Data — constructor resets shared state</h3><span class="pill pill--critical">critical</span></div>
+            <p class="item__loc">Class1.cs:21-25 · ParkService() · Program.cs:24</p>
+            <p>Creating a <code>ParkService</code> silently replaces the global store and re-seeds it. Instantiation order decides what data exists, which is the root of the "seed data wiped" defect.</p>
+<pre><code>public ParkService()
+{
+    DataAccessLayer.Init();
+    Init();
+}</code></pre>
+            <p><strong>Refactoring:</strong> Separate Query from Modifier: make the constructor side-effect free and move seeding to a dedicated, explicit startup step.</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Insider Trading</h3><span class="pill pill--critical">critical</span></div>
+            <p class="item__loc">Db2/Database.cs:8-11 · ReflectionHelper.cs:8</p>
+            <p><code>Database</code> declares <code>_dinosaurs</code> private, then hands it out through reflection on itself. Callers depend on a private field name that the compiler cannot check.</p>
+<pre><code>public static Dictionary&lt;string, DinosaurEntity&gt; Dinosaurs(Database db)
+{
+    return (Dictionary&lt;string, DinosaurEntity&gt;)ReflectionHelper.GetPrivateField(db, "_dinosaurs");
+}</code></pre>
+            <p><strong>Refactoring:</strong> Expose the intent instead of the data: <code>AddDinosaur</code>, <code>FindDinosaur</code> methods on <code>Database</code> (or on the new repository), then delete <code>ReflectionHelper</code>.</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Mutable Data — service edits persistence entities</h3><span class="pill pill--critical">critical</span></div>
+            <p class="item__loc">Class1.cs:94, 101, 116 · MoveDinosaur, ToggleZone</p>
+            <p><code>ParkService</code> reaches into <code>_db.Zones</code> and mutates <code>ZoneEntity.DinosaurCodes</code> and <code>AccessStatus</code> in place, bypassing <code>DataAccessLayer</code>'s own save methods. Persistence rules can no longer be enforced in one place.</p>
+            <p><strong>Refactoring:</strong> Move Function: give the zone the behaviour (<code>zone.Toggle()</code>, <code>zone.Release(name)</code>, <code>zone.Admit(name)</code>) and persist through the repository.</p>
+          </article>
+        </section>
+
+        <!-- ============ Modeling ============ -->
+        <section class="section" id="code-quality--modeling" aria-labelledby="code-quality--modeling-title">
+          <h2 class="section__title" id="code-quality--modeling-title">Data structures / modeling</h2>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Duplicated Code — entity mapping</h3><span class="pill pill--warning">significant</span></div>
+            <p class="item__loc">Class1.cs:151-158 and 183-190 · GetDinosaursInZone, GetAllZones · plus the inverse in Class1.cs:48-55</p>
+            <p>The <code>DinosaurEntity</code> → <code>Dinosaur</code> mapping, with its inverted booleans, is written twice; the reverse mapping a third time. A fix in one copy will be missed in the others.</p>
+            <p><strong>Refactoring:</strong> Extract Function into a single mapper (<code>ToDomain</code> / <code>ToEntity</code>), covered by one test that pins every field.</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Primitive Obsession</h3><span class="pill pill--warning">significant</span></div>
+            <p class="item__loc">Class1.cs:53, 126-137 · CanSpeciesCoexist</p>
+            <p>Zones and dinosaurs are identified by display names, species are compared to string literals, and health is the string <code>"Sick"</code> or <code>null</code>. "T-Rex" and "Tyrannosaurus Rex" are different species to the code.</p>
+            <p><strong>Refactoring:</strong> Replace Primitive with Object: <code>ZoneName</code>, <code>Species</code> (with a diet), <code>HealthStatus</code> enum; drive compatibility from species data instead of literals.</p>
+          </article>
+        </section>
+
+        <!-- ============ Complexity ============ -->
+        <section class="section" id="code-quality--complexity" aria-labelledby="code-quality--complexity-title">
+          <h2 class="section__title" id="code-quality--complexity-title">Size / complexity</h2>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Deep Nesting</h3><span class="pill pill--critical">critical</span></div>
+            <p class="item__loc">Class1.cs:29-37 · AddZone</p>
+            <p>Four levels (<code>foreach</code> › <code>if</code> › <code>if</code> › <code>if</code>) to answer "does this key exist?". The <code>name != null</code> check is repeated on every iteration.</p>
+<pre><code>foreach (var zone in DataAccessLayer._db.Zones)
+{ if (name != null)
+    {
+        if (zone.Value.ZoneCode != null)
+        {
+            if (zone.Value.ZoneCode == name) { throw new Exception("Zone already exists."); }</code></pre>
+            <p><strong>Refactoring:</strong> Replace Nested Conditional with Guard Clauses, then Replace Loop with <code>Zones.ContainsKey(name)</code>.</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Loops</h3><span class="pill pill--warning">significant</span></div>
+            <p class="item__loc">Class1.cs:44-46, 74-84, 112-116 · AddDinosaurToZone, MoveDinosaur, ToggleZone</p>
+            <p>Index loops call <code>Zones.ElementAt(i)</code> several times per iteration on a dictionary: quadratic lookups where a keyed access is constant time, and the intent is buried.</p>
+            <p><strong>Refactoring:</strong> Replace Loop with Pipeline, or simply <code>TryGetValue</code> on the key.</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Duplicated Code — controller error handling</h3><span class="pill pill--warning">significant</span></div>
+            <p class="item__loc">JurassicCode.API/Controllers/ParkController.cs:24, 38, 52, 66, 80, 94, 108</p>
+            <p>Seven identical <code>catch (Exception)</code> blocks map every failure to <code>500</code>. Changing the error contract means editing seven places (Divergent Change).</p>
+            <p><strong>Refactoring:</strong> Extract the policy into exception middleware or an <code>IExceptionFilter</code>; throw domain exceptions mapped to <code>400</code> / <code>404</code> / <code>409</code>.</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Large Class — split by <code>partial</code></h3><span class="pill pill--warning">significant</span></div>
+            <p class="item__loc">Class1.cs (198 lines) + Init.cs (277 lines) · ParkService</p>
+            <p>The service mixes use cases and 277 lines of fixture data; <code>partial</code> hides the size without separating responsibilities.</p>
+            <p><strong>Refactoring:</strong> Extract Class: a <code>ParkSeeder</code> for the data, keep <code>ParkService</code> for use cases.</p>
+          </article>
+        </section>
+
+        <!-- ============ Readability ============ -->
+        <section class="section" id="code-quality--readability" aria-labelledby="code-quality--readability-title">
+          <h2 class="section__title" id="code-quality--readability-title">Readability / naming</h2>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Mysterious Name</h3><span class="pill pill--minor">minor</span></div>
+            <p class="item__loc">Class1.cs · namespace Db2 · project JurrassicCode.Console · DinosaurEntity.IsVegan</p>
+            <p>A default IDE file name for the central service, a versioned namespace, a typo in a project name, and <code>IsVegan</code> as the negation of <code>IsCarnivorous</code>.</p>
+            <p><strong>Refactoring:</strong> Rename File / Rename Field: <code>ParkService.cs</code>, <code>Persistence</code>, <code>JurassicCode.Console</code>, <code>IsCarnivorous</code> on both sides.</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Comments</h3><span class="pill pill--minor">minor</span></div>
+            <p class="item__loc">Class1.cs:124 · Startup.cs:20, 35, 47, 57</p>
+            <p>"Logique complexe et inutile pour déterminer la coexistence" apologises for the code instead of fixing it; the Startup comments are template boilerplate.</p>
+            <p><strong>Refactoring:</strong> Extract Function with an intention-revealing name, delete the comments.</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Lazy Element</h3><span class="pill pill--minor">minor</span></div>
+            <p class="item__loc">JurassicCode.API/Controllers/WeatherForecastController.cs · WeatherForecast.cs</p>
+            <p>The ASP.NET template's weather endpoint is still compiled and exposed in Swagger.</p>
+            <p><strong>Refactoring:</strong> Remove Dead Code.</p>
+          </article>
+
+          <article class="item">
+            <div class="item__head"><h3 class="item__title">Speculative Generality</h3><span class="pill pill--minor">minor</span></div>
+            <p class="item__loc">JurassicCode.csproj · Confluent.Kafka 0.11.1, Polly 2.2.0</p>
+            <p>Messaging and resilience libraries declared for features that do not exist.</p>
+            <p><strong>Refactoring:</strong> Remove the package references; reintroduce current versions when a real need appears.</p>
+          </article>
+        </section>
+
+        <section class="section" id="code-quality--cq-summary" aria-labelledby="code-quality--cq-summary-title">
+          <h2 class="section__title" id="code-quality--cq-summary-title">Summary</h2>
+          <p>14 smells detected: 5 critical, 5 significant, 4 minor, plus 3 behaviour defects.</p>
+          <p class="callout"><strong>Recommended starting point: Global Data in <code>DataAccessLayer</code>.</strong> Replacing the static store with an injected repository removes the constructor reset (and its seed-data bug), makes <code>ParkService</code> testable in isolation, and gives the reflection hack and the direct entity mutations a proper home. Pin the current behaviour first with tests that assert returned fields, which will immediately expose the <code>GetDinosaurs</code> data loss.</p>
+        </section></div>
+</section>
+</main>
+</body>
+</html>

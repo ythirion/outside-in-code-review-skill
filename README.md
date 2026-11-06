@@ -35,11 +35,16 @@ outside-in-code-review/
 ├── skills/
 │   └── outside-in-code-review/
 │       ├── SKILL.md             # Skill definition: frontmatter metadata + execution protocol
-│       └── references/
-│           └── catalog.md       # All 28 code smells — definitions and refactoring guidance
+│       ├── references/
+│       │   └── catalog.md       # All 28 code smells — definitions and refactoring guidance
+│       ├── assets/              # Copied into every report: report.css, diagrams.js, template.html,
+│       │                        # fonts/, vendor/mermaid.min.js (embedded Mermaid, works offline)
+│       └── scripts/
+│           ├── validate_diagrams.py  # Renders every diagram in headless Chrome, checks C4 coverage
+│           └── export_pdf.py         # Assembles all pages and prints outside-in-review.pdf
 ├── examples/
-│   ├── Report.md                # Sample Report.md for a fictional codebase
-│   └── details/                 # Sample detail files (Backlog, C4, CodeQuality)
+│   └── outside-in-review/       # Sample static HTML report (jurassic-code): index, architecture,
+│                                # flow, backlog, code quality + self-contained assets
 ├── scripts/
 │   └── package.sh               # Builds outside-in-code-review-<version>.zip
 ├── README.md                    # This file
@@ -48,7 +53,7 @@ outside-in-code-review/
 ├── LICENSE
 └── .github/
     └── workflows/
-        └── release.yml          # Packages .skill and creates draft release on version tag
+        └── release.yml          # Packages the zip and creates a draft release on version tag
 ```
 
 ## Installation
@@ -70,7 +75,8 @@ The plugin installs the skill and all slash commands automatically. From any Cla
 Download the latest zip from the [Releases](../../releases) page, unzip, and install:
 
 ```bash
-cp -r skills/* ~/.claude/skills/
+mkdir -p ~/.claude/skills/outside-in-code-review
+cp -r skill/* ~/.claude/skills/outside-in-code-review/
 ```
 
 ### Option 3 — Individual slash commands
@@ -101,14 +107,14 @@ cp -r skill/* ~/.claude/skills/outside-in-code-review/
 3. Tag the commit with the matching version:
 
 ```bash
-git tag v1.1.0
-git push origin v1.1.0
+git tag v2.0.0
+git push origin v2.0.0
 ```
 
 The GitHub Action (`.github/workflows/release.yml`) will:
-- Package `outside-in-review.skill` from source
+- Package `outside-in-code-review-<version>.zip` from source (skill with its assets and scripts, commands, README)
 - Validate that the tag matches the version in `SKILL.md`
-- Create a **draft release** on GitHub with the `.skill` file attached
+- Create a **draft release** on GitHub with the zip attached
 
 The Claude Plugin Hub auto-discovers the update within 2 hours once the tag is pushed.
 
@@ -122,7 +128,24 @@ Once the skill is installed, just describe what you want in any Claude Code sess
 
 > *"Review this codebase"* / *"Technical audit"* / *"I don't know this codebase"*
 
-The skill runs all four phases automatically and produces `outside-in-review/Report.md` + `outside-in-review/details/{Backlog,C4,CodeQuality}.md`.
+The skill runs all its phases automatically and produces a static HTML site in `outside-in-review/`:
+
+| Page | Content |
+|------|---------|
+| `index.html` | Dashboard with gauges, then the 13 sections (documentation → eco-design) and the summary |
+| `architecture.html` | C4 diagrams: Context, Container, Component, Code |
+| `flow-<slug>.html` | One business flow detailed end-to-end with a sequence diagram |
+| `backlog.html` | Features reverse-engineered as user stories with Gherkin acceptance criteria |
+| `code-quality.html` | Code smells with a letter grade and refactoring guidance |
+| `outside-in-review.pdf` | The whole report as one PDF |
+
+Every diagram is validated before the report is handed over, and can be copied as Mermaid or downloaded as `.mmd` / `.svg`.
+
+By default the skill picks the most central business flow; name another one to detail it instead:
+
+> *"Review this codebase and detail the checkout flow"*
+
+**Requirements:** Python 3 and a Chromium-based browser (Chrome, Chromium, Edge or Brave; set `CHROME_PATH` to choose one) for diagram validation and PDF export. Nothing is downloaded at run time.
 
 ### Running individual steps
 
@@ -139,7 +162,20 @@ The skill runs all four phases automatically and produces `outside-in-review/Rep
 
 ## Sample Output
 
-See [`examples/Report.md`](./examples/Report.md) for a complete example of what the discovery report looks like.
+The skill was run on [jurassic-code](https://github.com/ythirion/jurassic-code), a legacy-code workshop repository. The result is a static site you can browse:
+
+[![Outside-In Review of jurassic-code: dashboard with an overall health of 36/100 and one gauge per section](img/report-preview.webp)](https://htmlpreview.github.io/?https://github.com/ythirion/outside-in-code-review-skill/blob/main/examples/outside-in-review/index.html)
+
+**[Open the live report](https://htmlpreview.github.io/?https://github.com/ythirion/outside-in-code-review-skill/blob/main/examples/outside-in-review/index.html)** · [Download the PDF](examples/outside-in-review/outside-in-review.pdf) · [Browse the source](examples/outside-in-review/)
+
+What you will find in it:
+- **Report**: dashboard with gauges, then the 13 sections (documentation, CI/CD, git history, dependencies, hotspots, accessibility, eco-design…)
+- **Architecture**: the 4 C4 levels as Mermaid diagrams, each one validated, copyable and downloadable (`.mmd`, `.svg`)
+- **Flow**: "move a dinosaur" traced end-to-end, from the button click to the in-memory store
+- **Backlog**: 9 features reverse-engineered as user stories with Gherkin acceptance criteria
+- **Code quality**: 14 code smells and 3 real defects the tests did not catch
+
+To view it offline, clone the repo and open `examples/outside-in-review/index.html`: no server or network needed.
 
 ## Core Principles
 
