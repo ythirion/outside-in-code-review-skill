@@ -1,6 +1,7 @@
 # Outside-In Code Review
 [![Release skill](https://github.com/ythirion/outside-in-code-review-skill/actions/workflows/release.yml/badge.svg)](https://github.com/ythirion/outside-in-code-review-skill/actions/workflows/release.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/ythirion/outside-in-code-review-skill)](https://github.com/ythirion/outside-in-code-review-skill/releases)
+[![Listed on ClaudePluginHub](https://www.claudepluginhub.com/badge/ythirion-outside-in-code-review)](https://www.claudepluginhub.com/plugins/ythirion-outside-in-code-review?ref=badge)
 
 A structured skill for AI agents to explore and review unknown codebases — layer by layer, from surface artifacts down to implementation detail.
 

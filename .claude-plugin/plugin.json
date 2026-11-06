@@ -12,7 +12,9 @@
     "code-quality",
     "outside-in"
   ],
-  "author": "Yoan Thirion",
+  "author": {
+    "name": "Yoan Thirion"
+  },
   "license": "MIT",
   "homepage": "https://github.com/ythirion/outside-in-code-review-skill",
   "repository": "https://github.com/ythirion/outside-in-code-review-skill"
